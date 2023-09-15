@@ -1,0 +1,16 @@
+*{
+    font-family: sans-serif;}
+ body {display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    min-height: 100vh;
+    }
+ header {
+    background-color: brown;
+}
+ h1 {
+    margin-left: 10%;
+ }
+ main {
+    margin-left: 5%;
+ }

@@ -4,13 +4,16 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Itinerary planner</title>
+        <title>Itinerary Planner</title>
+        <!-- mapquest api following 2 lines -->
+        <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest-maps.js"></script>
+        <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest-maps.css"/>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
         <link rel="stylesheet" href="assets/css/style.css">
     </head>
     <body>
         <header>
-          <h1> Itinerary planner</h1> 
+          <h1> Itinerary Planner</h1> 
         </header>
         <main>
             <form class="pure-form">
@@ -33,8 +36,31 @@
                 </br>
                     <input type="checkbox" id="architecture"/> Architecture
                 </label>
-                <button type="submit" class="pure-button-primary">Search Plaining Itineracy</button>
+                <button type="submit" class="pure-button-primary">Search Planning Itinerary</button>
             </form>
+
+
+            <!-- START mapquest api route time test form -->
+            <br>
+            <br>
+            <form id="test-form">
+                <label>Start Location:</label>
+                <input type="text" id="start-location" required><br>
+        
+                <label for="end-location">End Location:</label>
+                <input type="text" id="end-location" required><br>
+        
+                <button>Get Directions</button>
+            </form>
+        
+            <!-- mapquest api response -->
+            <div id="directions-result"></div>
+            <br>
+            <!-- route time -->
+            <div id="route-time"></div>
+            <!-- END mapquest api route time test form -->
+
+
         </main>
         <script src="assets/js/script.js"></script>
     </body>

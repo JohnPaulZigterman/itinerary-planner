@@ -17,11 +17,11 @@ document.getElementById('test-form').addEventListener('submit', function (event)
         })
         .then(function(data) {
             // show API response data 
-            console.log(data)
+            console.log(data);
 
             // extract and display the distance from the API response
-            if (data.route.formattedTime) {
-                document.getElementById('route-time').textContent = 'Route Time: ' + data.route.formattedTime;
+            if (data.time[1]) {
+                document.getElementById('route-time').textContent = 'Route Time: ' + data.time[1];
             } else {
                 document.getElementById('route-time').textContent = 'Route time not available.';
             }

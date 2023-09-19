@@ -16,6 +16,11 @@ scheduleButton.addEventListener('click', function (event) {
     event.preventDefault();
     main.innerHTML += "<p>" + dateStart.value + "</p>";
     main.innerHTML += "<p>" + dateEnd.value + "</p>";
+    var d1 = new Date(dateStart.value);
+    var d2 = new Date(dateEnd.value);
+    var diff = Math.abs(d1-d2);
+    var days = (diff / 86400000);
+    main.innerHTML += "<p>Days: " + days + "</p>";
 
 })
 

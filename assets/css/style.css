@@ -14,3 +14,9 @@
  main {
     margin-left: 5%;
  }
+ form {
+   display: flex;
+   flex-wrap: wrap;
+   flex-direction: column;
+   max-width: 50vh;
+ }

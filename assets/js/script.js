@@ -21,7 +21,9 @@ scheduleButton.addEventListener('click', function (event) {
     var diff = Math.abs(d1-d2);
     var days = (diff / 86400000);
     main.innerHTML += "<p>Days: " + days + "</p>";
-
+    for (var i = 1; i <= days; i++) {
+        main.innerHTML += '<section><h2>Day ' + i + '</h2><article><p>Precipitation: <span></span>%</p><p>Temp: <span></span>&deg;F</p><p>Wind: <span></span>mph</p><p>Humidity: <span></span>%</p></article><table class="pure-table pure-table-bordered"><thead><tr><th>Time</th><th>Activity</th></tr></thead><tbody><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tbody></table></section>';
+    }
 })
 
 

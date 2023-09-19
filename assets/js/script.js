@@ -11,53 +11,6 @@ var main = document.getElementById('main');
 var scheduleButton = document.getElementById('scheduleButton');
 
 
-// var allDatesArr = [];
-// function to generate date array
-    // var dateStart = document.getElementById('dateStart');
-    // var dateEnd = document.getElementById('dateEnd');
-
-    // check of end date is actually after the start date....
-    // use push method
-    // maybe will need to convert dates to unix?
-    // console.log(allDatesArr)
-    
-
-
-// function to generate flex-box columns based on start and end date
-    // create container in html with flex properties -- this is already done i think
-    // var NAMEOFCONTAINER = document.getElementById('');
-    
-    // clear any existing columns
-    // NAMEOFCONTAINER.innerHTML = '';
-
-    // loop through allDatesArr
-    // for (var i = 0; i < allDatesArr.length; i++) {
-    //     var dateTitle = allDatesArr[i];
-    //     var column = document.createElement('div'); 
-    //     column.className = 'flex-column'; // in css create a class for the columns to apply ?
-    //     column.textContent = dateTitle;
-    // };
-
-    // call function for creating date titles
-
-
-// function to generate column header elements
-    // 
-    
-
-
-    
-
-
-
-
-
-   
-
-
-
-
-
 
 scheduleButton.addEventListener('click', function (event) {
     event.preventDefault();

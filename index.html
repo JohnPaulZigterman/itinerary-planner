@@ -16,17 +16,21 @@
           <h1> Itinerary Planner</h1> 
         </header>
         <main>
-            <form class="pure-form">
+
+            <form class="pure-form" autocomplete="off">
                 <p>Enter the date you want to start your trip?</p>
-                <input type="date" id="dateInput" required>
+                <input type="date" id="dateStart" required>
                 <p>Enter the date you want to end your trip?</p>
-                <input type="date" id="dateInput" required>
+                <input type="date" id="dateEnd" required>
                 <p>Enter the lodging address?</p>
-                <input type="text" class="pure-input-rounded" id="address" placeholder="Address" required>
+                <input type="text" class="pure-input-rounded" id="address" placeholder="Address" list="auto-complete" required>
                 <input type="text" class="pure-input-rounded" id="city" placeholder="City" required>
                 <input type="text" class="pure-input-rounded" id="state/province" placeholder="State/Province" required>
                 <input type="text" class="pure-input-rounded" id="country" placeholder="Country" required>
-                <p>Check each that you want to include</p>
+                 
+                <!--Commenting out recommendation form for now
+                
+                    <p>Check each that you want to include</p>
                 <label for="checkbox-radio-option-one" class="pure-checkbox">
                     <input type="checkbox" id=" restaurants"/>  Restaurants
                 </br>
@@ -36,11 +40,14 @@
                 </br>
                     <input type="checkbox" id="architecture"/> Architecture
                 </label>
-                <button type="submit" class="pure-button-primary">Search Planning Itinerary</button>
+
+                uncommenting submit button -->
+                <button type="submit" class="pure-button-primary" id="submitButton">Search Planning Itinerary</button>
             </form>
 
 
-            <!-- START mapquest api route time test form -->
+            <!-- START mapquest api route time test form 
+
             <br>
             <br>
             <form id="test-form">
@@ -52,6 +59,8 @@
         
                 <button>Get Directions</button>
             </form>
+            
+        end of commenting out test form-->
         
             <!-- mapquest api response -->
             <div id="directions-result"></div>
@@ -62,6 +71,6 @@
 
 
         </main>
-        <script src="assets/js/"></script>
+        <script src="assets/js/script.js"></script>
     </body>
 </html>

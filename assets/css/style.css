@@ -2,7 +2,8 @@
     font-family: sans-serif;
 }
 
-body {display: flex;
+body {
+   display: flex;
     flex-wrap: wrap;
     flex-direction: column;
     min-height: 100vh;
@@ -55,4 +56,12 @@ table {
 
 th {
    background-color: burlywood;
+}
+
+#day-container {
+   display: flex;
+   flex-wrap: wrap;
+   flex-direction: row;
+   justify-content: space-evenly;
+   flex: 1;
 }

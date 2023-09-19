@@ -15,18 +15,23 @@
         <header>
           <h1> Itinerary Planner</h1> 
         </header>
-        <main>
+        <main id="main">
 
             <form class="pure-form" autocomplete="off">
                 <p>Enter the date you want to start your trip?</p>
                 <input type="date" id="dateStart" required>
                 <p>Enter the date you want to end your trip?</p>
                 <input type="date" id="dateEnd" required>
+                <button type="submit" class="pure-button-primary" id="scheduleButton">Map Your Days!</button>
                 <p>Enter the lodging address?</p>
                 <input type="text" class="pure-input-rounded" id="address" placeholder="Address" list="auto-complete" required>
+                
+                <!--
                 <input type="text" class="pure-input-rounded" id="city" placeholder="City" required>
                 <input type="text" class="pure-input-rounded" id="state/province" placeholder="State/Province" required>
                 <input type="text" class="pure-input-rounded" id="country" placeholder="Country" required>
+
+                -->
                  
                 <!--Commenting out recommendation form for now
                 

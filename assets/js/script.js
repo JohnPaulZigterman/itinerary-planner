@@ -7,7 +7,17 @@ var city = document.getElementById('city');
 var stateProvince = document.getElementById('state/province');
 var country = document.getElementById('country');
 var submitButton = document.getElementById('submitButton');
+var main = document.getElementById('main');
+var scheduleButton = document.getElementById('scheduleButton');
 
+
+
+scheduleButton.addEventListener('click', function (event) {
+    event.preventDefault();
+    main.innerHTML += "<p>" + dateStart.value + "</p>";
+    main.innerHTML += "<p>" + dateEnd.value + "</p>";
+
+})
 
 
 address.addEventListener('input', function() {

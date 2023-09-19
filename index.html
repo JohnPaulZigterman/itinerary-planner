@@ -6,7 +6,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Itinerary Planner</title>
         <!-- mapquest api following 2 lines -->
-        <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest-maps.js"></script>
         <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest-maps.css"/>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
         <link rel="stylesheet" href="assets/css/style.css">
@@ -17,41 +16,43 @@
         </header>
         <main>
             <form class="pure-form">
-                <p>Enter the date you want to start your trip?</p>
-                <input type="date" id="dateInput" required>
-                <p>Enter the date you want to end your trip?</p>
-                <input type="date" id="dateInput" required>
-                <p>Enter the lodging address?</p>
-                <input type="text" class="pure-input-rounded" id="address" placeholder="Address" required>
-                <input type="text" class="pure-input-rounded" id="city" placeholder="City" required>
-                <input type="text" class="pure-input-rounded" id="state/province" placeholder="State/Province" required>
-                <input type="text" class="pure-input-rounded" id="country" placeholder="Country" required>
-                <p>Check each that you want to include</p>
+                <label for="startDateInput">Enter the date you want to start your trip?</label>
+                <input type="date" id="startDateInput" required>
+            </br>
+                <label for="endDateInput">Enter the date you want to end your trip?</label>
+                <input type="date" id="endDateInput" required>
+            </br>
+                <label for="lodging">Enter the lodging address?</label>
+                <input type="text" class="pure-input-rounded" id="lodging" placeholder="Address,City,State/Province," required>
+            </br>
+                <label for="start-location">Enter the start location address?</label>
+                <input type="text" class="pure-input-rounded" id="start-location" placeholder="Address,City,State/Province" required>
+            </br>
+                <label for="end-location">Enter the end location address?</label>
+                <input type="text" class="pure-input-rounded" id="end-location" placeholder="Address,City,State/Province" required>
+            </br>
+                <label>Check each that you want to include</label>
                 <label for="checkbox-radio-option-one" class="pure-checkbox">
-                    <input type="checkbox" id=" restaurants"/>  Restaurants
-                </br>
-                    <input type="checkbox" id="museums"/> Museums
-                </br>
-                    <input type="checkbox" id="shopping-centers"/>Shopping Centers
-                </br>
-                    <input type="checkbox" id="architecture"/> Architecture
+                    <input type="checkbox" id="(All)Restauran"/> 
+                    <label for="(All)Restauran">(All) Restaurants</label>
+            </br>
+                    <input type="checkbox" id="shoppingCenters&Malls"/> 
+                    <label for="shoppingCenters&Malls">Shopping Centers & Malls</label>
+            </br>
+                    <input type="checkbox" id="historicalPlaces"/>
+                    <label for="historicalPlaces">Historical Places</label>
+            </br>
+                    <input type="checkbox" id="parks"/>
+                    <label for="parks">Parks</label>
+            </br>
+                    <input type="checkbox" id="touristAttractions"/>
+                    <label for="touristAttractions">Tourist Attractions</label>
                 </label>
-                <button type="submit" class="pure-button-primary">Search Planning Itinerary</button>
+                <button type="submit" class="pure-button-primary">Search Planning Itinerary </button>
             </form>
 
 
             <!-- START mapquest api route time test form -->
-            <br>
-            <br>
-            <form id="test-form">
-                <label>Start Location:</label>
-                <input type="text" id="start-location" required><br>
-        
-                <label for="end-location">End Location:</label>
-                <input type="text" id="end-location" required><br>
-        
-                <button>Get Directions</button>
-            </form>
         
             <!-- mapquest api response -->
             <div id="directions-result"></div>
@@ -62,6 +63,7 @@
 
 
         </main>
-        <script src="assets/js/"></script>
+        <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest-maps.js"></script>
+        <script src="assets/js/script.js"></script>
     </body>
 </html>

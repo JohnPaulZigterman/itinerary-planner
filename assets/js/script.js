@@ -12,6 +12,8 @@ var scheduleButton = document.getElementById('scheduleButton');
 
 
 
+
+
 scheduleButton.addEventListener('click', function (event) {
     event.preventDefault();
     var d1 = new Date(dateStart.value);
@@ -19,8 +21,35 @@ scheduleButton.addEventListener('click', function (event) {
     var diff = Math.abs(d1-d2);
     var days = ((diff / 86400000) + 1);
     for (var i = 1; i <= days; i++) {
-        dayContainer.innerHTML += '<section><h2>Day ' + i + '</h2><article><p>Precipitation: <span></span>%</p><p>Temp: <span></span>&deg;F</p><p>Wind: <span></span>mph</p><p>Humidity: <span></span>%</p></article><table class="pure-table pure-table-bordered"><thead><tr><th>Time</th><th>Activity</th></tr></thead><tbody><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tbody></table></section>';
+        dayContainer.innerHTML += '<section><h2>Day ' + i + '</h2><p>Search By Address</p><input type="text" class="pure-input-rounded address-search" autocomplete="off" id="address' + i + '" placeholder="Address" list="auto-complete' + i + '"><article><p>Precipitation: <span></span>%</p><p>Temp: <span></span>&deg;F</p><p>Wind: <span></span>mph</p><p>Humidity: <span></span>%</p></article><table class="pure-table pure-table-bordered"><thead><tr><th>Time</th><th>Activity</th></tr></thead><tbody><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tbody></table></section>';
     }
+    searchFields = document.querySelectorAll('.address-search');
+
+    searchFields.forEach(item => {
+        item.addEventListener('input', function() {
+            console.log(item.value);
+            console.log(item.getAttribute("list"));
+
+            if (item.value.length > 1) {
+                suggestURL = "https://www.mapquestapi.com/search/v3/prediction?key=3HkLXgscqDPRETajQUjpap4tOOpSzX1U&limit=5&collection=adminArea,poi,address,category,franchise,airport&q=" + item.value;
+            
+                fetch(suggestURL)
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(data) {
+                        item.innerHTML = "";
+                        var list = '';
+                        for (var i = 0; i < data.results.length; i++) {
+                            list += "<option value='" + data.results[i].displayString + "'>" + data.results[i].displayString + "</option>";
+                        }
+                        item.innerHTML = "<datalist id='" + item.getAttribute('list') + "'>" + list + "</datalist>";
+                    })
+                } else {
+                    return;
+                }
+        })
+    })
 })
 
 

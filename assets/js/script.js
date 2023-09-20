@@ -26,11 +26,18 @@ scheduleButton.addEventListener('click', function (event) {
     var diff = Math.abs(d1-d2);
     var days = ((diff / 86400000) + 1);
     for (var i = 1; i <= days; i++) {
-        dayContainer.innerHTML += '<section><h2>Day ' + i + '</h2><p>Search By Address</p><input type="text" class="pure-input-rounded address-search" autocomplete="off" id="address' + i + '" placeholder="Address" list="auto-complete' + i + '"><article><p>Precipitation: <span></span>%</p><p>Temp: <span></span>&deg;F</p><p>Wind: <span></span>mph</p><p>Humidity: <span></span>%</p></article><table class="pure-table pure-table-bordered"><thead><tr><th>Time</th><th>Activity</th></tr></thead><tbody><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tbody></table></section>';
+        dayContainer.innerHTML += '<section><h2>Day ' + i + '</h2><p>Search By Address</p><input type="text" class="pure-input-rounded address-search" autocomplete="off" id="address' + i + '" placeholder="Address" list="auto-complete' + i + '"><button type="submit" class="submit-button">Submit</button><article><p>Precipitation: <span></span>%</p><p>Temp: <span></span>&deg;F</p><p>Wind: <span></span>mph</p><p>Humidity: <span></span>%</p></article><table class="pure-table pure-table-bordered"><thead><tr><th>Time</th><th>Activity</th></tr></thead><tbody><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tbody></table></section>';
     }
     searchFields = document.querySelectorAll('.address-search');
+    var submitButtons = document.querySelectorAll('.submit-button');
+
+    submitButtons.forEach(item => {
+        item.preventDefault();
+        
+    })
 
     searchFields.forEach(item => {
+
         item.addEventListener('input', function() {
             console.log(item.value);
             console.log(item.getAttribute("list"));

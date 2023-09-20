@@ -46,3 +46,16 @@
  th {
     background-color: burlywood;
  }
+
+
+
+
+ #activity-block {
+   display: flex;
+   flex-direction: column;
+ }
+
+ .activity-block-row {
+   width: 100%;
+ }
+

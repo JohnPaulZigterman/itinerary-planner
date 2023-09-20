@@ -10,7 +10,12 @@ var submitButton = document.getElementById('submitButton');
 var dayContainer = document.getElementById('day-container');
 var scheduleButton = document.getElementById('scheduleButton');
 
-
+function fetchAPIData(apiUrl) {
+    return fetch(apiUrl)
+        .then(function(response) {
+            return response.json();
+        })
+};
 
 scheduleButton.addEventListener('click', function (event) {
     event.preventDefault();
@@ -56,66 +61,107 @@ address.addEventListener('input', function() {
 // submitButton.addEventListener('click', placeSearch());
 
 
+// mapquest API route time calculator
+function calculateRouteTime (address) {
+    var routeTimeStartLocation = address; // this is either the lodging address by default or that day's central location, specified by user
+    var routeTimeEndLocation = activityAddress; // this is the activityAddress
 
+    var requestUrl = 'https://www.mapquestapi.com/directions/v2/routematrix?key=3HkLXgscqDPRETajQUjpap4tOOpSzX1U&from=' + routeTimeStartLocation + '&to=' + routeTimeEndLocation;
 
-// mapquest API route time test 
+    fetchAPIData(requestUrl)
+       .then(function(response) {
+           return response.json();
+       })
 
-//document.getElementById('test-form').addEventListener('submit', function (event) {
-   // event.preventDefault(); 
-
-    // retrieve the values entered by the user
-   // var startLocation = document.getElementById('start-location').value;
-  //  var endLocation = document.getElementById('end-location').value;
-
-    // create the API request with key, start point, and end point
-  //  var requestUrl = 'https://www.mapquestapi.com/directions/v2/routematrix?key=3HkLXgscqDPRETajQUjpap4tOOpSzX1U&from=' + startLocation + '&to=' + endLocation;
-
-    // fetch API:
-   // fetch(requestUrl)
-  //      .then(function(response) {
-   //         return response.json();
-   //     })
-   //     .then(function(data) {
+       .then(function(data) {
             // show API response data 
-   //         console.log(data);
+            console.log(data);
 
-   //         var seconds = data.time[1];
+            var seconds = data.time[1];
             // convert seconds to hours (3600s/hr)
-   //         var hours = Math.floor(seconds / 3600); 
+            var hours = Math.floor(seconds / 3600); 
             // remainder seconds
-   //         seconds %= 3600;
+            seconds %= 3600;
             // convert remainder seconds to minutes (60s/min)
-   //         var minutes = Math.floor(seconds / 60);    
+            var minutes = Math.floor(seconds / 60);    
             
-     //       var readableTime = '';
+            var readableTime = '';
 
             // show hours only if time exceeds one hour
-     //       if (hours > 0) {
-     //           readableTime += hours + ' hour'; 
-      //          if (hours > 1) {
-     //               readableTime += 's'; // make hours plural if more than 1 hour
-     //           }
-     //           if (minutes > 0) {
-     //               readableTime += ' '; // add space if there are minutes to show
-      //          }
-      //      }
-//
+            if (hours > 0) {
+                readableTime += hours + ' hour'; 
+                if (hours > 1) {
+                    readableTime += 's'; // make hours plural if more than 1 hour
+                }
+                if (minutes > 0) {
+                    readableTime += ' '; // add space if there are minutes to show
+                }
+            }
+
             // show minutes only if needed
-//            if (minutes > 0) {
- //               readableTime += minutes + ' minute';
- //               if (minutes > 1) {
- //                   readableTime += 's'; // make minutes plural if more than 1 min
- //               }
- //           }
-//
-  //          // extract and display the distance from the API response
-  //          if (data.time[1]) {
-   //             document.getElementById('route-time').textContent = 'Route Time: ' + readableTime;
-  //          } else {
- //               document.getElementById('route-time').textContent = 'Route time not available.';
- ///           }
- //       })
+            if (minutes > 0) {
+                readableTime += minutes + ' minute';
+                if (minutes > 1) {
+                    readableTime += 's'; // make minutes plural if more than 1 min
+                }
+            }
 
-//});
+            // // extract and display the distance from the API response
+            // if (data.time[1]) {
+            //     document.getElementById('route-time').textContent = 'Route Time: ' + readableTime;
+            // } else {
+            //     document.getElementById('route-time').textContent = 'Route time not available.';
+            // }
+       })
+};
 
-// end mapquest API route time test
+
+
+
+
+
+// function to generate activity blocks that will be appended to the column as its own row
+function generateActivityBlock(Activity) {
+    // call function to fetch api data
+    var apiURL = // hmmm...
+
+    fetchAPIData(apiURL)
+
+    // collect each item from form, need to assign IDs accordingly input to this input field
+    var activityName  = $('#activity-name-input').val(); // attach autocomplete
+    var activityAddress = $('#activity-address-input').val(); // attach autocomplete 
+    var activityDescription = $('#activity-description-input').val();
+
+    // create activity container
+    var activityBlock = document.createElement('div');
+    
+        var activityNameEl = document.createElement('div');
+        activityNameEl.className = 'activity-block-row activity-name'; // in css create activity-name class
+        activityNameEl.textContent = activityName;
+        activityBlock.appendChild(activityNameEl);
+
+        var activityAddressEl = document.createElement('div');
+        activityAddressEl.className = 'activity-block-row activity-address'; // in css create activity-address class
+        activityAddressEl.textContent = activityAddress;
+        activityBlock.appendChild(activityAddressEl);
+
+        var activityDescriptionEl = document.createElement('div');
+        activityDescriptionEl.className = 'activity-block-row activity-description'; // in css create a class for the column headers?
+        activityDescriptionEl.textContent = activityDescription;
+        activityBlock.appendChild(activityDescriptionEl);
+        
+        var routeTimeButton = document.createElement("button");
+        routeTimeButton.className = "route-time-calculation-button";
+        routeTimeButton.textContent = 'Calculate Route Time';
+        activityBlock.append(routeTimeButton)
+
+        routeTimeButton.addEventListener("click", function() {
+            calculateRouteTime(activityAddress)
+            routeTimeButton.textContent = readableTime;
+        });
+
+    endofcolumn.append(activityBlock) // name of column?
+
+    // can we make the blocks drag and drop-able?
+
+}

@@ -1,15 +1,13 @@
-// mapquest placesearch API test
+// establish variables for input fields and buttons
 
 var dateStart = document.getElementById('dateStart');
 var dateEnd = document.getElementById('dateEnd');
 var address = document.getElementById('address');
-var city = document.getElementById('city');
-var stateProvince = document.getElementById('state/province');
-var country = document.getElementById('country');
 var submitButton = document.getElementById('submitButton');
 var dayContainer = document.getElementById('day-container');
 var scheduleButton = document.getElementById('scheduleButton');
 
+// generally declared fetch function for reference and ease of use
 function fetchAPIData(apiUrl) {
     return fetch(apiUrl)
         .then(function(response) {
@@ -18,53 +16,85 @@ function fetchAPIData(apiUrl) {
 };
 
 
-
+// event listener for schedule generation on date submission
 scheduleButton.addEventListener('click', function (event) {
+    //prevents default submit button activity
     event.preventDefault();
+    //establishes two variables based on user input dates
     var d1 = new Date(dateStart.value);
     var d2 = new Date(dateEnd.value);
+    //calculates the difference between the two dates in milliseconds
     var diff = Math.abs(d1-d2);
+    //converts milliseconds to days and makes the days indexed to 1 instead of 0
     var days = ((diff / 86400000) + 1);
+    //for each day [we are now 1-indexed], we generate a container for the user to receive day specific data
+    //each search field is given a datalist and id based on its iteration
+    //the submit buttons also have iterative ids
     for (var i = 1; i <= days; i++) {
-        dayContainer.innerHTML += '<section><h2>Day ' + i + '</h2><p>Search By Address</p><input type="text" class="pure-input-rounded address-search" autocomplete="off" id="address' + i + '" placeholder="Address" list="auto-complete' + i + '"><button type="submit" class="submit-button">Submit</button><article><p>Precipitation: <span></span>%</p><p>Temp: <span></span>&deg;F</p><p>Wind: <span></span>mph</p><p>Humidity: <span></span>%</p></article><table class="pure-table pure-table-bordered"><thead><tr><th>Time</th><th>Activity</th></tr></thead><tbody><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tbody></table></section>';
+        dayContainer.innerHTML += '<section><h2>Day ' + i + '</h2><p>Search By Address</p><input type="text" class="pure-input-rounded address-search" autocomplete="off" id="address' + i + '" placeholder="Address" list="auto-complete' + i + '"><button type="submit" class="submit-button" id="submitButton' + i + '">Submit</button><article><p>Precipitation: <span></span>%</p><p>Temp: <span></span>&deg;F</p><p>Wind: <span></span>mph</p><p>Humidity: <span></span>%</p></article><table class="pure-table pure-table-bordered"><thead><tr><th>Time</th><th>Activity</th></tr></thead><tbody><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tbody></table></section>';
     }
-    searchFields = document.querySelectorAll('.address-search');
+    //generates a list of table fields
+    var tdList = document.querySelectorAll('td');
+    console.log(tdList);
+    //inserts an input with the grid-input class into each one
+    tdList.forEach(item => {
+        item.innerHTML = "<input class='grid-input' id='grid-input-" + item + "'>";
+    });
+    //establishes nodelists of all the generated search bars and submit buttons
+    var searchFields = document.querySelectorAll('.address-search');
     var submitButtons = document.querySelectorAll('.submit-button');
 
-    submitButtons.forEach(item => {
-        item.preventDefault();
-        
-    })
+    //this will be the event listener generation for the submit buttons to execute the place search API
+//  submitButtons.forEach(item => {
+//      item.preventDefault();
+//        
+//  })
 
+    //generates event listeners for search fields
+    //search fields are "item"
     searchFields.forEach(item => {
-
+        //listens for inputs in the search fields
         item.addEventListener('input', function() {
+            //logs some diagnostic stuff to console
             console.log(item.value);
             console.log(item.getAttribute("list"));
 
-            if (item.value.length > 1) {
+            //checks that the number of characters is at least three so as not to waste API
+            //calls or get an unusable response
+            if (item.value.length > 2) {
+                //generates API url based on input data
                 suggestURL = "https://www.mapquestapi.com/search/v3/prediction?key=3HkLXgscqDPRETajQUjpap4tOOpSzX1U&limit=5&collection=adminArea,poi,address,category,franchise,airport&q=" + item.value;
-            
+                
+                //fetches API url
                 fetch(suggestURL)
                     .then(function(response) {
                         return response.json();
                     })
+                    //dynamically refreshes and populates autofill field
                     .then(function(data) {
+                        //clears autofill on receipt of data
                         item.innerHTML = "";
+                        //generates empty list variable
                         var list = '';
+                        //for each entry in the results, generates an autofill option based on that node's data
+                        //and adds that html to the "list" variable
                         for (var i = 0; i < data.results.length; i++) {
                             list += "<option value='" + data.results[i].displayString + "'>" + data.results[i].displayString + "</option>";
                         }
+                        //appends list variable to a datalist and places it inside the input field as autofill data
+                        //additionally, adds the "list" attribute from that field to the datalist's ID
+                        //which allows the input field to reference the datalist
                         item.innerHTML = "<datalist id='" + item.getAttribute('list') + "'>" + list + "</datalist>";
                     })
                 } else {
+                    //if the input is not at least three characters, nothing happens
                     return;
                 }
         })
     })
 })
 
-
+//much simpler event listener for single input field, see above comments for technical description
 address.addEventListener('input', function() {
 
     if (address.value.length > 1) {

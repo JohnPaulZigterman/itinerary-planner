@@ -37,9 +37,9 @@ scheduleButton.addEventListener('click', function (event) {
     var tdList = document.querySelectorAll('td');
     console.log(tdList);
     //inserts an input with the grid-input class into each one
-    tdList.forEach(item => {
-        item.innerHTML = "<input class='grid-input' id='grid-input-" + item + "'>";
-    });
+    for (var i = 0; i < tdList.length; i++) {
+        tdList[i].innerHTML = "<input type='text' class='grid-input' id='grid-input-" + i + "'>";
+    };
     //establishes nodelists of all the generated search bars and submit buttons
     var searchFields = document.querySelectorAll('.address-search');
     var submitButtons = document.querySelectorAll('.submit-button');

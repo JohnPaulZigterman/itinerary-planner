@@ -67,6 +67,7 @@ td {
    background: transparent;
    border: none;
    width: 100px;
+   min-height: 40px;
 }
 
 #day-container {

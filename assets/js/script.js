@@ -21,7 +21,7 @@ function fetchAPIData(apiUrl) {
 
 
 // function to generate activity blocks that will be appended to the column as its own row
-function generateActivityBlock(activityButton) {
+function generateActivityBlock(activityButton, i) {
     // // call function to fetch api data
     // var apiURL = // hmmm... not sure if i even need this?
 
@@ -30,8 +30,7 @@ function generateActivityBlock(activityButton) {
     var activityBlocks = document.getElementById(`activity-blocks`);
 
     // collect each item from form, need to assign classes accordingly input to this input field
-    var activityName  = document.querySelector(`.activity-name-input`).value; // attach autocomplete
-    var activityAddress = document.querySelector(`.activity-address-input`).value; // attach autocomplete 
+    var activityAddress = document.getElementById(`address${i}`).value; // attach autocomplete 
     var activityDescription = document.querySelector(`.activity-description-input`).value;
 
     // create activity container
@@ -115,16 +114,13 @@ scheduleButton.addEventListener('click', function (event) {
 
                 <div class="activity-input-form">
                     <p>Schedule Activities:</p>
-                    <div><input type="text" class="activity-name-input" class="pure-input-rounded" autocomplete="off" placeholder="Name of Location"></div>
-                    <div><input type="text" class="activity-address-input" class="pure-input-rounded address-search" autocomplete="off" placeholder="Address"></div>
+                    <div><p>Search By Address</p>
+                    <input type="text" class="pure-input-rounded address-search" autocomplete="off" id="address${i}" placeholder="Address" list="auto-complete ${i}"></div>
                     <div><input type="text" class="activity-description-input" class="pure-input-rounded" autocomplete="off" placeholder="Description of Activity (Optional"></div>
                     <button id="activity-button-${i}">Input Activity</button>
                 </div>
 
                 <div id="activity-blocks"></div>
-
-                <p>Search By Address</p>
-                <input type="text" class="pure-input-rounded address-search" autocomplete="off" id="address${i}" placeholder="Address" list="auto-complete ${i}">
                 
                 <table class="pure-table pure-table-bordered">
                     <thead>
@@ -150,7 +146,7 @@ scheduleButton.addEventListener('click', function (event) {
         if (activityButton) {
             activityButton.addEventListener('click', function (event) {
                 event.preventDefault();
-                generateActivityBlock(event.target); 
+                generateActivityBlock(event.target, i); 
             });
         }
     }

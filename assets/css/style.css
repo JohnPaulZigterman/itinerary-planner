@@ -56,6 +56,17 @@ table {
 
 th {
    background-color: burlywood;
+   width: 50px;
+}
+
+td {
+   width: 50px;
+}
+
+.grid-input {
+   background: transparent;
+   border: none;
+   width: 100px;
 }
 
 #day-container {

@@ -4,14 +4,14 @@
 
 body {
    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-    min-height: 100vh;
+   flex-wrap: wrap;
+   flex-direction: column;
+   min-height: 100vh;
 }
 
 
 
-header {
+header, footer {
    background-color: brown;
    margin-bottom: 10px;
    min-height: 8vh;
@@ -28,7 +28,7 @@ section {
    display: flex;
    flex-wrap: wrap;
    flex-direction: column;
-   justify-content: space-evenly;
+   justify-content: flex-start;
    min-width: 32vh;
    min-height: 90vh;
 }
@@ -70,6 +70,7 @@ td {
    min-height: 40px;
 }
 
+
 #day-container {
    display: flex;
    flex-wrap: wrap;
@@ -77,3 +78,50 @@ td {
    justify-content: space-evenly;
    flex: 1;
 }
+
+
+.weather-block {
+   background-color: skyblue;
+}
+
+.activity-input-form {
+   margin-bottom: 1.5em;
+} 
+
+.activity-input-form p {
+   margin-top: 1.51em;
+   margin-bottom: 0.25em;
+} 
+
+.activity-input {
+   width: 100%;
+   box-sizing: border-box; 
+   margin-top: .25em;
+   margin-bottom: .25em;
+} 
+
+#schedule-title p {
+   text-align: center;
+   font-size: 1.75em;
+   margin-top: 0em;
+   margin-bottom: 0.1em;
+}
+
+.route-time-calculation-button {
+   width: 100%;
+   box-sizing: border-box; 
+}
+
+#route-modal {
+   display: none; /* hide modal */
+   position: fixed;
+   z-index: 1;
+   left: 50%;
+   top: 50%;
+   transform: translate(-50%, -50%);
+   width: 50%;
+   height: 50%;
+   background-color: gray;
+ }
+
+

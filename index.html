@@ -15,21 +15,54 @@
         <header>
           <h1> Itinerary Planner</h1> 
         </header>
-        <main id="main">
 
+        <main id="main">
             <form class="pure-form" autocomplete="off">
                 <p>Enter the date you want to start your trip?</p>
                 <input type="date" id="dateStart" required>
                 <p>Enter the date you want to end your trip?</p>
                 <input type="date" id="dateEnd" required>
                 <p>Enter the lodging address?</p>
-                <input type="text" class="pure-input-rounded" id="address" placeholder="Address" list="auto-complete" required>
+                <input type="text" class="pure-input-rounded" id="lodging-address" placeholder="Address" list="auto-complete" required>
                 <button type="submit" class="pure-button-primary" id="scheduleButton">Map Your Days!</button>
                 
             </form>
         </main>
+
         <br>
             <div id="day-container"></div>
+        <br>
+        
+        <!-- route time calculation modal  -->
+        <!-- add CSS to account for spacing, instead of using <br>s -->
+        <div id="route-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="modal-close-button">&times;</span>
+                <h2>Calculate Route Times</h2>
+                <label for="address-dropdown-1">From:</label> 
+                    <select name="dropdown" class="activity-addresses-dropdown" id="address-dropdown-1"></select><br>
+                
+                <br>
+
+                <label for="address-dropdown-1">To:</label> 
+                    <select name="dropdown" class="activity-addresses-dropdown" id="address-dropdown-2"></select><br>
+
+                <br>
+
+                <button id="calculate-driving-time-button">Calculate Driving Time</button><br>                
+                
+                <br>
+
+                <div id="route-time"></div>
+
+            </div>
+        </div>
+
+
+
+        <footer>
+            <h3>Happy planning!</h3>
+        </footer>
 
         <script
           src="https://cdn.jsdelivr.net/npm/dayjs@1.11.3/dayjs.min.js"
@@ -38,4 +71,7 @@
         </script>
         <script src="assets/js/script.js"></script>
     </body>
+
+
+
 </html>

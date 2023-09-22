@@ -2,7 +2,7 @@
 
 var dateStart = document.getElementById('dateStart');
 var dateEnd = document.getElementById('dateEnd');
-var address = document.getElementById('address');
+var lodgingAddress = document.getElementById('lodging-address');
 var submitButton = document.getElementById('submitButton');
 var dayContainer = document.getElementById('day-container');
 var scheduleButton = document.getElementById('scheduleButton');
@@ -17,15 +17,15 @@ function fetchAPIData(apiUrl) {
 };
 
 // function to generate activity blocks that will be appended to the column as its own row
-function generateActivityBlock(i) {
+function generateActivityBlock(dayIndex) {
     // // call function to fetch api data
     // var apiURL = // hmmm... not sure if i even need this?
 
     // fetchAPIData(apiURL)
 
-    var addressField = document.getElementById(`address${i}`);
-    var descriptionField = document.getElementById(`description${i}`);
-    var tableBody = document.getElementById(`tbody-${i}`);
+    var addressField = document.getElementById(`address${dayIndex}`);
+    var descriptionField = document.getElementById(`description${dayIndex}`);
+    var tableBody = document.getElementById(`tbody-${dayIndex}`);
 
    tableBody.innerHTML += `
    <tr>
@@ -37,10 +37,36 @@ function generateActivityBlock(i) {
 }
 
 
+// function to open modal
+function openModal() {
+    // open modal
+    var modal = document.getElementById('route-modal');
+    modal.style.display = 'block';
+}
+
+  
+// function to close  modal
+function closeModal() {
+    var modal = document.getElementById('route-modal');
+    modal.style.display = 'none';
+}
+
+// array of all activity addresses (not sure how to create array per day...) 
+var activityAddresses = [];
+
+
+
 // poi search
 scheduleButton.addEventListener('click', function (event) {
     //prevents default submit button activity
     event.preventDefault();
+
+    // add lodging address to array for addresses
+    if (lodgingAddress.value !== '') {
+        activityAddresses.push(lodgingAddress.value);
+        console.log(activityAddresses);
+    }
+
     //establishes two variables based on user input dates
     var d1 = new Date(dateStart.value);
     var d2 = new Date(dateEnd.value);
@@ -51,11 +77,11 @@ scheduleButton.addEventListener('click', function (event) {
     //for each day [we are now 1-indexed], we generate a container for the user to receive day specific data
     //each search field is given a datalist and id based on its iteration
     //the submit buttons also have iterative ids
-    for (var i = 1; i <= days; i++) {
+    for (var dayIndex = 1; dayIndex <= days; dayIndex++) {
    
         dayContainer.innerHTML += `
             <section>
-                <h2>Day ${i}: ${dayjs(d1).add(i - 1, 'day').format('M-DD-YYYY')}</h2>
+                <h2>Day ${dayIndex}: ${dayjs(d1).add(dayIndex - 1, 'day').format('M-DD-YYYY')}</h2>
 
                 <div class="weather-block">
                     <p>Temp: <span></span>&deg;F</p>
@@ -66,15 +92,26 @@ scheduleButton.addEventListener('click', function (event) {
 
                 <div class="activity-input-form">
                     <p>Schedule Activities:</p>
-                    <div><p>Search By Address</p>
-                    <input type="text" class="pure-input-rounded address-search" autocomplete="off" id="address${i}" placeholder="Address" list="auto-complete ${i}"></div>
-                    <div><input type="text" class="activity-description-input" id="description${i}" class="pure-input-rounded" autocomplete="off" placeholder="Description of Activity (Optional"></div>
-                    <div><input type="time"></div>
-                    <button id="activity-button-${i}" class="activity-button">Input Activity</button>
+                    <div>
+                        <input type="text" 
+                            class="pure-input-rounded activity-input address-search" 
+                            id="address${dayIndex}" 
+                            autocomplete="off" 
+                            placeholder="Address" 
+                            list="auto-complete ${dayIndex}">
+                    </div>
+                    <div>
+                        <input type="text" 
+                            class="pure-input-rounded activity-input" 
+                            id="description${dayIndex}" 
+                            autocomplete="off" 
+                            placeholder="Description of Activity (Optional)">
+                    </div>
+                    <div><input type="time" class="activity-input"></div>
+                    <button class="activity-input activity-button" id="activity-button-${dayIndex}">Add to Schedule</button>
                 </div>
 
-                <div id="activity-blocks"></div>
-                
+                <div id="schedule-title"><p>Daily Schedule</p></div>
                 <table class="pure-table pure-table-bordered">
                     <thead>
                         <tr>
@@ -83,26 +120,33 @@ scheduleButton.addEventListener('click', function (event) {
                             <th>Activity</th>
                         </tr>
                     </thead>
-                    <tbody id="tbody-${i}" class="tbody">
+                    <tbody id="tbody-${dayIndex}" class="tbody">
                     </tbody>
                 </table>
 
+                <div></div>
             </section>`;
-
-            
     }
 
 
     
-
+    //retrieve every "add to schedule" button per column to schedule activities, then add functionality
     var activityButtons = document.querySelectorAll(`.activity-button`);
 
     activityButtons.forEach(item => {
         item.addEventListener('click', function(event) {
-            event.preventDefault();
-            var addressInput = item.parentElement.children[1].children[1].value;
+            event.preventDefault(); //parentElement is the activity-input-form div
+            var addressInput = item.parentElement.children[1].children[0].value;
+
+            // check if the address input is empty, and return if it is
+            if (addressInput === '') {
+                alert('Please fill out an address before adding to the schedule.');
+                return; 
+            }
+
             var descriptionInput = item.parentElement.children[2].children[0].value;
             var timeInput = item.parentElement.children[3].children[0].value;
+            // parentElement of activity-input-form div => section, [3].[1]. => table, tbody id="tbody-${i}"
             var appendTableLocation = item.parentElement.parentElement.children[4].children[1];
             appendTableLocation.innerHTML += `
             <tr>
@@ -111,8 +155,67 @@ scheduleButton.addEventListener('click', function (event) {
                 <td>${descriptionInput}</td>
             </tr>
             `;
+            
+            // clear inputs
+            item.parentElement.children[1].children[0].value = ''; 
+            item.parentElement.children[2].children[0].value = ''; 
+            item.parentElement.children[3].children[0].value = '';
+
+            var routeCalculatorButton = item.parentElement.parentElement.children[5].children[0];
+
+            if (!routeCalculatorButton) {
+                var appendRouteCalculatorButtonLocation = item.parentElement.parentElement.children[5];
+                var routeTimesButton = document.createElement("button");
+                routeTimesButton.className = "route-time-calculation-button";
+                routeTimesButton.textContent = 'Calculate Route Times';
+                appendRouteCalculatorButtonLocation.append(routeTimesButton)
+
+                // add event listener to open modal
+                routeTimesButton.addEventListener('click', openModal);
+
+                // add event listener to close modal
+                var modalCloseButton = document.getElementById('modal-close-button');
+                modalCloseButton.addEventListener('click', closeModal);
+            }
+
+            // create array for addresses if needed, otherwise add to it
+            activityAddresses = activityAddresses || [];
+            activityAddresses.push(addressInput);
+            console.log(activityAddresses)
+
+
+            // retrieve and reset dropdowns for addresses
+            var addressDropdowns = document.getElementsByClassName('activity-addresses-dropdown');
+
+            // loop for each dropdown
+            for (var i = 0; i < addressDropdowns.length; i++) {
+                var addressDropdown = addressDropdowns[i];
+                addressDropdown.innerHTML = ''; 
+
+                // populate dropdowns with addresses
+                if (activityAddresses) {
+                    activityAddresses.forEach(item => {
+                        var option = document.createElement('option');
+                        option.textContent = item;
+                        addressDropdown.appendChild(option);
+                    });
+                }
+            }
+
+            // event listener for "calculate driving time" button
+            var calculateDrivingTimeButton = document.getElementById('calculate-driving-time-button');
+            calculateDrivingTimeButton.addEventListener('click', function() {
+                var startLocationDropdown = document.getElementById('address-dropdown-1');
+                var endLocationDropdown = document.getElementById('address-dropdown-2');
+
+                var startLocationAddress = startLocationDropdown.options[startLocationDropdown.selectedIndex].value;
+                var endLocationAddress = endLocationDropdown.options[endLocationDropdown.selectedIndex].value;
+
+                calculateRouteTime(startLocationAddress, endLocationAddress);
+            });
         })
     })
+   
     
 
     searchFields = document.querySelectorAll('.address-search');
@@ -162,10 +265,10 @@ scheduleButton.addEventListener('click', function (event) {
 })
 
 //much simpler event listener for single input field, see above comments for technical description
-address.addEventListener('input', function() {
+lodgingAddress.addEventListener('input', function() {
 
-    if (address.value.length > 1) {
-    suggestURL = "https://www.mapquestapi.com/search/v3/prediction?key=3HkLXgscqDPRETajQUjpap4tOOpSzX1U&limit=5&collection=adminArea,poi,address,category,franchise,airport&q=" + address.value;
+    if (lodgingAddress.value.length > 1) {
+    suggestURL = "https://www.mapquestapi.com/search/v3/prediction?key=3HkLXgscqDPRETajQUjpap4tOOpSzX1U&limit=5&collection=adminArea,poi,address,category,franchise,airport&q=" + lodgingAddress.value;
 
     fetch(suggestURL)
         .then(function(response) {
@@ -173,12 +276,12 @@ address.addEventListener('input', function() {
         })
         .then(function(data) {
             // show API response data 
-            address.innerHTML = "";
+            lodgingAddress.innerHTML = "";
             var list = '';
             for (var i = 0; i < data.results.length; i++) {
                 list += "<option value='" + data.results[i].displayString + "'>" + data.results[i].displayString + "</option>";
             }
-            address.innerHTML = "<datalist id='auto-complete'>" + list + "</datalist>";
+            lodgingAddress.innerHTML = "<datalist id='auto-complete'>" + list + "</datalist>";
         })
     } else {
         return;
@@ -193,18 +296,14 @@ address.addEventListener('input', function() {
 
 
 // mapquest API route time calculator
-function calculateRouteTime (address) {
-    var routeTimeStartLocation = address; // this is either the lodging address by default or that day's central location, specified by user
-    var routeTimeEndLocation = activityAddress; // this is the activityAddress
-
-    var requestUrl = 'https://www.mapquestapi.com/directions/v2/routematrix?key=3HkLXgscqDPRETajQUjpap4tOOpSzX1U&from=' + routeTimeStartLocation + '&to=' + routeTimeEndLocation;
+function calculateRouteTime (startLocationAddress, endLocationAddress) {
+    var requestUrl = 
+    `https://www.mapquestapi.com/directions/v2/routematrix?key=3HkLXgscqDPRETajQUjpap4tOOpSzX1U&from=
+    ${startLocationAddress}&to=${endLocationAddress}`
 
     fetchAPIData(requestUrl)
-       .then(function(response) {
-           return response.json();
-       })
 
-       .then(function(data) {
+        .then(function(data) {
             // show API response data 
             console.log(data);
 
@@ -237,11 +336,11 @@ function calculateRouteTime (address) {
                 }
             }
 
-            // // extract and display the distance from the API response
-            // if (data.time[1]) {
-            //     document.getElementById('route-time').textContent = 'Route Time: ' + readableTime;
-            // } else {
-            //     document.getElementById('route-time').textContent = 'Route time not available.';
-            // }
-       })
-};
+            // extract and display the distance from the API response
+            if (data.time[1]) {
+                document.getElementById('route-time').textContent = 'Driving Time: ' + readableTime;
+            } else {
+                document.getElementById('route-time').textContent = 'Route time not available.';
+            }
+    })
+}

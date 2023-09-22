@@ -37,6 +37,20 @@ function generateActivityBlock(dayIndex) {
 }
 
 
+// function to open modal
+function openModal() {
+    var modal = document.getElementById('route-modal');
+    modal.style.display = 'block';
+}
+  
+// function to close  modal
+function closeModal() {
+    var modal = document.getElementById('route-modal');
+    modal.style.display = 'none';
+}
+
+
+
 // poi search
 scheduleButton.addEventListener('click', function (event) {
     //prevents default submit button activity
@@ -143,6 +157,16 @@ scheduleButton.addEventListener('click', function (event) {
                 routeTimesButton.textContent = 'Calculate Route Times';
                 appendRouteCalculatorButtonLocation.append(routeTimesButton)
             }
+
+            // add event listener to open modal
+            routeTimesButton.addEventListener('click', openModal);
+
+            // add event listener to close modal
+            var modalCloseButton = document.getElementById('modal-close-button');
+            modalCloseButton.addEventListener('click', closeModal);
+            
+
+
         })
     })
     

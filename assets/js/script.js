@@ -201,6 +201,18 @@ scheduleButton.addEventListener('click', function (event) {
                     });
                 }
             }
+
+            // event listener for "calculate driving time" button
+            var calculateDrivingTimeButton = document.getElementById('calculate-driving-time-button');
+            calculateDrivingTimeButton.addEventListener('click', function() {
+                var startLocationDropdown = document.getElementById('address-dropdown-1');
+                var endLocationDropdown = document.getElementById('address-dropdown-2');
+
+                var startLocationAddress = startLocationDropdown.options[startLocationDropdown.selectedIndex].value;
+                var endLocationAddress = endLocationDropdown.options[endLocationDropdown.selectedIndex].value;
+
+                calculateRouteTime(startLocationAddress, endLocationAddress);
+            });
         })
     })
    
@@ -284,54 +296,51 @@ lodgingAddress.addEventListener('input', function() {
 
 
 // mapquest API route time calculator
-function calculateRouteTime (address) {
-    // var routeTimeStartLocation = // grab the option from the modal
-    // var routeTimeEndLocation = // grab the option from the modal
-
-    var requestUrl = 'https://www.mapquestapi.com/directions/v2/routematrix?key=3HkLXgscqDPRETajQUjpap4tOOpSzX1U&from=' + routeTimeStartLocation + '&to=' + routeTimeEndLocation;
+function calculateRouteTime (startLocationAddress, endLocationAddress) {
+    var requestUrl = 
+    `https://www.mapquestapi.com/directions/v2/routematrix?key=3HkLXgscqDPRETajQUjpap4tOOpSzX1U&from=
+    ${startLocationAddress}&to=${endLocationAddress}`
 
     fetchAPIData(requestUrl)
-    .then(function(response) {
-        return response.json();
-    })
-    .then(function(data) {
-        // show API response data 
-        console.log(data);
 
-        var seconds = data.time[1];
-        // convert seconds to hours (3600s/hr)
-        var hours = Math.floor(seconds / 3600); 
-        // remainder seconds
-        seconds %= 3600;
-        // convert remainder seconds to minutes (60s/min)
-        var minutes = Math.floor(seconds / 60);    
-        
-        var readableTime = '';
+        .then(function(data) {
+            // show API response data 
+            console.log(data);
 
-        // show hours only if time exceeds one hour
-        if (hours > 0) {
-            readableTime += hours + ' hour'; 
-            if (hours > 1) {
-                readableTime += 's'; // make hours plural if more than 1 hour
+            var seconds = data.time[1];
+            // convert seconds to hours (3600s/hr)
+            var hours = Math.floor(seconds / 3600); 
+            // remainder seconds
+            seconds %= 3600;
+            // convert remainder seconds to minutes (60s/min)
+            var minutes = Math.floor(seconds / 60);    
+            
+            var readableTime = '';
+
+            // show hours only if time exceeds one hour
+            if (hours > 0) {
+                readableTime += hours + ' hour'; 
+                if (hours > 1) {
+                    readableTime += 's'; // make hours plural if more than 1 hour
+                }
+                if (minutes > 0) {
+                    readableTime += ' '; // add space if there are minutes to show
+                }
             }
+
+            // show minutes only if needed
             if (minutes > 0) {
-                readableTime += ' '; // add space if there are minutes to show
+                readableTime += minutes + ' minute';
+                if (minutes > 1) {
+                    readableTime += 's'; // make minutes plural if more than 1 min
+                }
             }
-        }
 
-        // show minutes only if needed
-        if (minutes > 0) {
-            readableTime += minutes + ' minute';
-            if (minutes > 1) {
-                readableTime += 's'; // make minutes plural if more than 1 min
+            // extract and display the distance from the API response
+            if (data.time[1]) {
+                document.getElementById('route-time').textContent = 'Driving Time: ' + readableTime;
+            } else {
+                document.getElementById('route-time').textContent = 'Route time not available.';
             }
-        }
-
-        // extract and display the distance from the API response
-        if (data.time[1]) {
-            document.getElementById('route-time').textContent = 'Route Time: ' + readableTime;
-        } else {
-            document.getElementById('route-time').textContent = 'Route time not available.';
-        }
-   })
+    })
 }

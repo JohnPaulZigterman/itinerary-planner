@@ -79,7 +79,7 @@ scheduleButton.addEventListener('click', function (event) {
                             class="pure-input-rounded activity-input" 
                             id="description${dayIndex}" 
                             autocomplete="off" 
-                            placeholder="Description of Activity (Optional">
+                            placeholder="Description of Activity (Optional)">
                     </div>
                     <div><input type="time" class="activity-input"></div>
                     <button class="activity-input activity-button" id="activity-button-${dayIndex}">Add to Schedule</button>
@@ -97,9 +97,8 @@ scheduleButton.addEventListener('click', function (event) {
                     </tbody>
                 </table>
 
+                <div></div>
             </section>`;
-
-            
     }
 
 
@@ -120,7 +119,7 @@ scheduleButton.addEventListener('click', function (event) {
 
             var descriptionInput = item.parentElement.children[2].children[0].value;
             var timeInput = item.parentElement.children[3].children[0].value;
-            //parentElement of activity-input-form div => section, [3].[1]. => table, tbody id="tbody-${i}"
+            // parentElement of activity-input-form div => section, [3].[1]. => table, tbody id="tbody-${i}"
             var appendTableLocation = item.parentElement.parentElement.children[3].children[1];
             appendTableLocation.innerHTML += `
             <tr>
@@ -129,6 +128,21 @@ scheduleButton.addEventListener('click', function (event) {
                 <td>${descriptionInput}</td>
             </tr>
             `;
+            
+            // clear inputs
+            item.parentElement.children[1].children[0].value = ''; 
+            item.parentElement.children[2].children[0].value = ''; 
+            item.parentElement.children[3].children[0].value = '';
+
+            var routeCalculatorButton = item.parentElement.parentElement.children[4].children[0];
+
+            if (!routeCalculatorButton) {
+                var appendRouteCalculatorButtonLocation = item.parentElement.parentElement.children[4];
+                var routeTimesButton = document.createElement("button");
+                routeTimesButton.className = "route-time-calculation-button";
+                routeTimesButton.textContent = 'Calculate Route Times';
+                appendRouteCalculatorButtonLocation.append(routeTimesButton)
+            }
         })
     })
     

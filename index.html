@@ -23,7 +23,7 @@
                 <p>Enter the date you want to end your trip?</p>
                 <input type="date" id="dateEnd" required>
                 <p>Enter the lodging address?</p>
-                <input type="text" class="pure-input-rounded" id="address" placeholder="Address" list="auto-complete" required>
+                <input type="text" class="pure-input-rounded" id="lodging-address" placeholder="Address" list="auto-complete" required>
                 <button type="submit" class="pure-button-primary" id="scheduleButton">Map Your Days!</button>
                 
             </form>
@@ -38,12 +38,13 @@
             <div class="modal-content">
                 <span class="close" id="modal-close-button">&times;</span>
                 <h2>Calculate Route Times</h2>
-                <div>content</div>
-                <div>content</div>
-                <div>content</div>
-                <div>content</div>
-                <div>content</div>
-                <div>content</div>
+                <label for="address-dropdown-1">From:</label> 
+                    <select name="dropdown" class="activity-addresses-dropdown" id="address-dropdown-1"></select>
+                <br>
+                <label for="address-dropdown-1">To:</label> 
+                    <select name="dropdown" class="activity-addresses-dropdown" id="address-dropdown-2"></select>
+                <div id="route-time"></div>
+
             </div>
         </div>
 

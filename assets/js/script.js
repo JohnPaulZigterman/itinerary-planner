@@ -2,7 +2,7 @@
 
 var dateStart = document.getElementById('dateStart');
 var dateEnd = document.getElementById('dateEnd');
-var address = document.getElementById('address');
+var lodgingAddress = document.getElementById('lodging-address');
 var submitButton = document.getElementById('submitButton');
 var dayContainer = document.getElementById('day-container');
 var scheduleButton = document.getElementById('scheduleButton');
@@ -39,9 +39,11 @@ function generateActivityBlock(dayIndex) {
 
 // function to open modal
 function openModal() {
+    // open modal
     var modal = document.getElementById('route-modal');
     modal.style.display = 'block';
 }
+
   
 // function to close  modal
 function closeModal() {
@@ -49,12 +51,22 @@ function closeModal() {
     modal.style.display = 'none';
 }
 
+// array of all activity addresses (not sure how to create array per day...) 
+var activityAddresses = [];
+
 
 
 // poi search
 scheduleButton.addEventListener('click', function (event) {
     //prevents default submit button activity
     event.preventDefault();
+
+    // add lodging address to array for addresses
+    if (lodgingAddress.value !== '') {
+        activityAddresses.push(lodgingAddress.value);
+        console.log(activityAddresses);
+    }
+
     //establishes two variables based on user input dates
     var d1 = new Date(dateStart.value);
     var d2 = new Date(dateEnd.value);
@@ -99,6 +111,7 @@ scheduleButton.addEventListener('click', function (event) {
                     <button class="activity-input activity-button" id="activity-button-${dayIndex}">Add to Schedule</button>
                 </div>
 
+                <div id="schedule-title"><p>Daily Schedule</p></div>
                 <table class="pure-table pure-table-bordered">
                     <thead>
                         <tr>
@@ -134,7 +147,7 @@ scheduleButton.addEventListener('click', function (event) {
             var descriptionInput = item.parentElement.children[2].children[0].value;
             var timeInput = item.parentElement.children[3].children[0].value;
             // parentElement of activity-input-form div => section, [3].[1]. => table, tbody id="tbody-${i}"
-            var appendTableLocation = item.parentElement.parentElement.children[3].children[1];
+            var appendTableLocation = item.parentElement.parentElement.children[4].children[1];
             appendTableLocation.innerHTML += `
             <tr>
                 <td>${timeInput}</td>
@@ -148,27 +161,49 @@ scheduleButton.addEventListener('click', function (event) {
             item.parentElement.children[2].children[0].value = ''; 
             item.parentElement.children[3].children[0].value = '';
 
-            var routeCalculatorButton = item.parentElement.parentElement.children[4].children[0];
+            var routeCalculatorButton = item.parentElement.parentElement.children[5].children[0];
 
             if (!routeCalculatorButton) {
-                var appendRouteCalculatorButtonLocation = item.parentElement.parentElement.children[4];
+                var appendRouteCalculatorButtonLocation = item.parentElement.parentElement.children[5];
                 var routeTimesButton = document.createElement("button");
                 routeTimesButton.className = "route-time-calculation-button";
                 routeTimesButton.textContent = 'Calculate Route Times';
                 appendRouteCalculatorButtonLocation.append(routeTimesButton)
+
+                // add event listener to open modal
+                routeTimesButton.addEventListener('click', openModal);
+
+                // add event listener to close modal
+                var modalCloseButton = document.getElementById('modal-close-button');
+                modalCloseButton.addEventListener('click', closeModal);
             }
 
-            // add event listener to open modal
-            routeTimesButton.addEventListener('click', openModal);
-
-            // add event listener to close modal
-            var modalCloseButton = document.getElementById('modal-close-button');
-            modalCloseButton.addEventListener('click', closeModal);
-            
+            // create array for addresses if needed, otherwise add to it
+            activityAddresses = activityAddresses || [];
+            activityAddresses.push(addressInput);
+            console.log(activityAddresses)
 
 
+            // retrieve and reset dropdowns for addresses
+            var addressDropdowns = document.getElementsByClassName('activity-addresses-dropdown');
+
+            // loop for each dropdown
+            for (var i = 0; i < addressDropdowns.length; i++) {
+                var addressDropdown = addressDropdowns[i];
+                addressDropdown.innerHTML = ''; 
+
+                // populate dropdowns with addresses
+                if (activityAddresses) {
+                    activityAddresses.forEach(item => {
+                        var option = document.createElement('option');
+                        option.textContent = item;
+                        addressDropdown.appendChild(option);
+                    });
+                }
+            }
         })
     })
+   
     
 
     searchFields = document.querySelectorAll('.address-search');
@@ -218,10 +253,10 @@ scheduleButton.addEventListener('click', function (event) {
 })
 
 //much simpler event listener for single input field, see above comments for technical description
-address.addEventListener('input', function() {
+lodgingAddress.addEventListener('input', function() {
 
-    if (address.value.length > 1) {
-    suggestURL = "https://www.mapquestapi.com/search/v3/prediction?key=3HkLXgscqDPRETajQUjpap4tOOpSzX1U&limit=5&collection=adminArea,poi,address,category,franchise,airport&q=" + address.value;
+    if (lodgingAddress.value.length > 1) {
+    suggestURL = "https://www.mapquestapi.com/search/v3/prediction?key=3HkLXgscqDPRETajQUjpap4tOOpSzX1U&limit=5&collection=adminArea,poi,address,category,franchise,airport&q=" + lodgingAddress.value;
 
     fetch(suggestURL)
         .then(function(response) {
@@ -229,12 +264,12 @@ address.addEventListener('input', function() {
         })
         .then(function(data) {
             // show API response data 
-            address.innerHTML = "";
+            lodgingAddress.innerHTML = "";
             var list = '';
             for (var i = 0; i < data.results.length; i++) {
                 list += "<option value='" + data.results[i].displayString + "'>" + data.results[i].displayString + "</option>";
             }
-            address.innerHTML = "<datalist id='auto-complete'>" + list + "</datalist>";
+            lodgingAddress.innerHTML = "<datalist id='auto-complete'>" + list + "</datalist>";
         })
     } else {
         return;
@@ -250,54 +285,53 @@ address.addEventListener('input', function() {
 
 // mapquest API route time calculator
 function calculateRouteTime (address) {
-    var routeTimeStartLocation = address; // this is either the lodging address by default or that day's central location, specified by user
-    var routeTimeEndLocation = activityAddress; // this is the activityAddress
+    // var routeTimeStartLocation = // grab the option from the modal
+    // var routeTimeEndLocation = // grab the option from the modal
 
     var requestUrl = 'https://www.mapquestapi.com/directions/v2/routematrix?key=3HkLXgscqDPRETajQUjpap4tOOpSzX1U&from=' + routeTimeStartLocation + '&to=' + routeTimeEndLocation;
 
     fetchAPIData(requestUrl)
-       .then(function(response) {
-           return response.json();
-       })
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(data) {
+        // show API response data 
+        console.log(data);
 
-       .then(function(data) {
-            // show API response data 
-            console.log(data);
+        var seconds = data.time[1];
+        // convert seconds to hours (3600s/hr)
+        var hours = Math.floor(seconds / 3600); 
+        // remainder seconds
+        seconds %= 3600;
+        // convert remainder seconds to minutes (60s/min)
+        var minutes = Math.floor(seconds / 60);    
+        
+        var readableTime = '';
 
-            var seconds = data.time[1];
-            // convert seconds to hours (3600s/hr)
-            var hours = Math.floor(seconds / 3600); 
-            // remainder seconds
-            seconds %= 3600;
-            // convert remainder seconds to minutes (60s/min)
-            var minutes = Math.floor(seconds / 60);    
-            
-            var readableTime = '';
-
-            // show hours only if time exceeds one hour
-            if (hours > 0) {
-                readableTime += hours + ' hour'; 
-                if (hours > 1) {
-                    readableTime += 's'; // make hours plural if more than 1 hour
-                }
-                if (minutes > 0) {
-                    readableTime += ' '; // add space if there are minutes to show
-                }
+        // show hours only if time exceeds one hour
+        if (hours > 0) {
+            readableTime += hours + ' hour'; 
+            if (hours > 1) {
+                readableTime += 's'; // make hours plural if more than 1 hour
             }
-
-            // show minutes only if needed
             if (minutes > 0) {
-                readableTime += minutes + ' minute';
-                if (minutes > 1) {
-                    readableTime += 's'; // make minutes plural if more than 1 min
-                }
+                readableTime += ' '; // add space if there are minutes to show
             }
+        }
 
-            // // extract and display the distance from the API response
-            // if (data.time[1]) {
-            //     document.getElementById('route-time').textContent = 'Route Time: ' + readableTime;
-            // } else {
-            //     document.getElementById('route-time').textContent = 'Route time not available.';
-            // }
-       })
-};
+        // show minutes only if needed
+        if (minutes > 0) {
+            readableTime += minutes + ' minute';
+            if (minutes > 1) {
+                readableTime += 's'; // make minutes plural if more than 1 min
+            }
+        }
+
+        // extract and display the distance from the API response
+        if (data.time[1]) {
+            document.getElementById('route-time').textContent = 'Route Time: ' + readableTime;
+        } else {
+            document.getElementById('route-time').textContent = 'Route time not available.';
+        }
+   })
+}

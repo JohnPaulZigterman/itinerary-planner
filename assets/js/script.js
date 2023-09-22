@@ -66,15 +66,26 @@ scheduleButton.addEventListener('click', function (event) {
 
                 <div class="activity-input-form">
                     <p>Schedule Activities:</p>
-                    <div><p>Search By Address</p>
-                    <input type="text" class="pure-input-rounded address-search" autocomplete="off" id="address${i}" placeholder="Address" list="auto-complete ${i}"></div>
-                    <div><input type="text" class="activity-description-input" id="description${i}" class="pure-input-rounded" autocomplete="off" placeholder="Description of Activity (Optional"></div>
+                    <div>
+                        <p>Search By Address</p>
+                        <input type="text" 
+                            class="pure-input-rounded address-search" 
+                            id="address${i}" 
+                            autocomplete="off" 
+                            placeholder="Address" 
+                            list="auto-complete ${i}">
+                    </div>
+                    <div>
+                        <input type="text" 
+                        class="pure-input-rounded activity-description-input" 
+                        id="description${i}" 
+                        autocomplete="off" 
+                        placeholder="Description of Activity (Optional">
+                    </div>
                     <div><input type="time"></div>
                     <button id="activity-button-${i}" class="activity-button">Input Activity</button>
                 </div>
 
-                <div id="activity-blocks"></div>
-                
                 <table class="pure-table pure-table-bordered">
                     <thead>
                         <tr>

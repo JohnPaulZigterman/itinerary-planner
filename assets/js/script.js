@@ -17,15 +17,15 @@ function fetchAPIData(apiUrl) {
 };
 
 // function to generate activity blocks that will be appended to the column as its own row
-function generateActivityBlock(i) {
+function generateActivityBlock(dayIndex) {
     // // call function to fetch api data
     // var apiURL = // hmmm... not sure if i even need this?
 
     // fetchAPIData(apiURL)
 
-    var addressField = document.getElementById(`address${i}`);
-    var descriptionField = document.getElementById(`description${i}`);
-    var tableBody = document.getElementById(`tbody-${i}`);
+    var addressField = document.getElementById(`address${dayIndex}`);
+    var descriptionField = document.getElementById(`description${dayIndex}`);
+    var tableBody = document.getElementById(`tbody-${dayIndex}`);
 
    tableBody.innerHTML += `
    <tr>
@@ -51,11 +51,11 @@ scheduleButton.addEventListener('click', function (event) {
     //for each day [we are now 1-indexed], we generate a container for the user to receive day specific data
     //each search field is given a datalist and id based on its iteration
     //the submit buttons also have iterative ids
-    for (var i = 1; i <= days; i++) {
+    for (var dayIndex = 1; dayIndex <= days; dayIndex++) {
    
         dayContainer.innerHTML += `
             <section>
-                <h2>Day ${i}: ${dayjs(d1).add(i - 1, 'day').format('M-DD-YYYY')}</h2>
+                <h2>Day ${dayIndex}: ${dayjs(d1).add(idayIndex - 1, 'day').format('M-DD-YYYY')}</h2>
 
                 <div class="weather-block">
                     <p>Temp: <span></span>&deg;F</p>
@@ -67,23 +67,22 @@ scheduleButton.addEventListener('click', function (event) {
                 <div class="activity-input-form">
                     <p>Schedule Activities:</p>
                     <div>
-                        <p>Search By Address</p>
                         <input type="text" 
                             class="pure-input-rounded address-search" 
-                            id="address${i}" 
+                            id="address${dayIndex}" 
                             autocomplete="off" 
                             placeholder="Address" 
-                            list="auto-complete ${i}">
+                            list="auto-complete ${dayIndex}">
                     </div>
                     <div>
                         <input type="text" 
-                        class="pure-input-rounded activity-description-input" 
-                        id="description${i}" 
-                        autocomplete="off" 
-                        placeholder="Description of Activity (Optional">
+                            class="pure-input-rounded activity-description-input" 
+                            id="description${dayIndex}" 
+                            autocomplete="off" 
+                            placeholder="Description of Activity (Optional">
                     </div>
                     <div><input type="time"></div>
-                    <button id="activity-button-${i}" class="activity-button">Input Activity</button>
+                    <button class="activity-button" id="activity-button-${dayIndex}">Add to Schedule</button>
                 </div>
 
                 <table class="pure-table pure-table-bordered">
@@ -94,7 +93,7 @@ scheduleButton.addEventListener('click', function (event) {
                             <th>Activity</th>
                         </tr>
                     </thead>
-                    <tbody id="tbody-${i}" class="tbody">
+                    <tbody id="tbody-${dayIndex}" class="tbody">
                     </tbody>
                 </table>
 
@@ -105,16 +104,17 @@ scheduleButton.addEventListener('click', function (event) {
 
 
     
-
+    //retrieve every "add to schedule" button per column to schedule activities
     var activityButtons = document.querySelectorAll(`.activity-button`);
 
     activityButtons.forEach(item => {
         item.addEventListener('click', function(event) {
-            event.preventDefault();
-            var addressInput = item.parentElement.children[1].children[1].value;
+            event.preventDefault(); //parentElement is the activity-input-form div
+            var addressInput = item.parentElement.children[1].children[0].value;
             var descriptionInput = item.parentElement.children[2].children[0].value;
             var timeInput = item.parentElement.children[3].children[0].value;
-            var appendTableLocation = item.parentElement.parentElement.children[4].children[1];
+            //parentElement of activity-input-form div => section, [3].[1]. => table, tbody id="tbody-${i}"
+            var appendTableLocation = item.parentElement.parentElement.children[3].children[1];
             appendTableLocation.innerHTML += `
             <tr>
                 <td>${timeInput}</td>

@@ -70,6 +70,7 @@ td {
    min-height: 40px;
 }
 
+
 #day-container {
    display: flex;
    flex-wrap: wrap;
@@ -77,3 +78,13 @@ td {
    justify-content: space-evenly;
    flex: 1;
 }
+
+
+.weather-block {
+   background-color: skyblue;
+}
+
+
+/* .activity-input-form {
+   background-color: 
+} */

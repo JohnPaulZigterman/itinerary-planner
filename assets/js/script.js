@@ -69,6 +69,7 @@ scheduleButton.addEventListener('click', function (event) {
                     <div><p>Search By Address</p>
                     <input type="text" class="pure-input-rounded address-search" autocomplete="off" id="address${i}" placeholder="Address" list="auto-complete ${i}"></div>
                     <div><input type="text" class="activity-description-input" id="description${i}" class="pure-input-rounded" autocomplete="off" placeholder="Description of Activity (Optional"></div>
+                    <div><input type="time"></div>
                     <button id="activity-button-${i}" class="activity-button">Input Activity</button>
                 </div>
 
@@ -78,14 +79,11 @@ scheduleButton.addEventListener('click', function (event) {
                     <thead>
                         <tr>
                             <th>Time</th>
+                            <th>Address</th>
                             <th>Activity</th>
                         </tr>
                     </thead>
                     <tbody id="tbody-${i}" class="tbody">
-                        <tr>
-                            <td></td>
-                            <td></td>
-                        </tr>
                     </tbody>
                 </table>
 
@@ -104,9 +102,11 @@ scheduleButton.addEventListener('click', function (event) {
             event.preventDefault();
             var addressInput = item.parentElement.children[1].children[1].value;
             var descriptionInput = item.parentElement.children[2].children[0].value;
+            var timeInput = item.parentElement.children[3].children[0].value;
             var appendTableLocation = item.parentElement.parentElement.children[4].children[1];
             appendTableLocation.innerHTML += `
             <tr>
+                <td>${timeInput}</td>
                 <td>${addressInput}</td>
                 <td>${descriptionInput}</td>
             </tr>
@@ -143,8 +143,9 @@ scheduleButton.addEventListener('click', function (event) {
                         var list = '';
                         //for each entry in the results, generates an autofill option based on that node's data
                         //and adds that html to the "list" variable
+                        console.log(data);
                         for (var i = 0; i < data.results.length; i++) {
-                            list += "<option value='" + data.results[i].displayString + "'>" + data.results[i].displayString + "</option>";
+                            list += "<option value='" + data.results[i].displayString + "'></option>";
                         }
                         //appends list variable to a datalist and places it inside the input field as autofill data
                         //additionally, adds the "list" attribute from that field to the datalist's ID
@@ -172,9 +173,7 @@ address.addEventListener('input', function() {
         })
         .then(function(data) {
             // show API response data 
-            console.log(data);
             address.innerHTML = "";
-            console.log(data.results.length);
             var list = '';
             for (var i = 0; i < data.results.length; i++) {
                 list += "<option value='" + data.results[i].displayString + "'>" + data.results[i].displayString + "</option>";

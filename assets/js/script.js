@@ -19,49 +19,48 @@ function fetchAPIData(apiUrl) {
 
 
 
-
+var activityIndex = 1;
 // function to generate activity blocks that will be appended to the column as its own row
-function generateActivityBlock(activityButton, i) {
-    // // call function to fetch api data
-    // var apiURL = // hmmm... not sure if i even need this?
-
-    // fetchAPIData(apiURL)
-
-    var activityBlocks = document.getElementById(`activity-blocks`);
-
-    // collect each item from form, need to assign classes accordingly input to this input field
-    var activityAddress = document.getElementById(`address${i}`).value; // attach autocomplete 
-    var activityDescription = document.querySelector(`.activity-description-input`).value;
-
-    // create activity container
-    var activityBlock = document.createElement('div');
+function generateActivityBlock(dayIndex) {
+    var activityBlocks = document.getElementById(`activity-blocks-${dayIndex}`);
     
-        var activityNameEl = document.createElement('div');
-        activityNameEl.className = 'activity-block-row activity-name'; // in css create activity-name class
-        activityNameEl.textContent = activityName;
-        activityBlock.appendChild(activityNameEl);
+    if (activityBlocks){
+        // collect each item from form
+        var activityAddress = document.getElementById(`address${dayIndex}`).value;
+        var activityDescription = document.getElementById(`activity-description-${dayIndex}`).value;
 
-        var activityAddressEl = document.createElement('div');
-        activityAddressEl.className = 'activity-block-row activity-address'; // in css create activity-address class
-        activityAddressEl.textContent = activityAddress;
-        activityBlock.appendChild(activityAddressEl);
-
-        var activityDescriptionEl = document.createElement('div');
-        activityDescriptionEl.className = 'activity-block-row activity-description'; // in css create a class for the column headers?
-        activityDescriptionEl.textContent = activityDescription;
-        activityBlock.appendChild(activityDescriptionEl);
+        // create activity block
+        var activityBlock = document.createElement('div');
+        activityBlock.id(`activity-item-${actvityIndex}`);
         
-        var routeTimeButton = document.createElement("button");
-        routeTimeButton.className = "route-time-calculation-button";
-        routeTimeButton.textContent = 'Calculate Route Time';
-        activityBlock.append(routeTimeButton)
+            var activityAddressEl = document.createElement('div');
+            activityAddressEl.id = `activity-address-${activityIndex}`; // css
+            activityAddressEl.textContent = activityAddress;
+            activityBlock.appendChild(activityAddressEl);
 
-        routeTimeButton.addEventListener("click", function() {
-            calculateRouteTime(activityAddress)
-            routeTimeButton.textContent = readableTime;
-        });
+            var activityDescriptionEl = document.createElement('div');
+            activityDescriptionEl.id = `activity-description-${activityIndex}`; // css
+            activityDescriptionEl.textContent = activityDescription;
+            activityBlock.appendChild(activityDescriptionEl);
+            
+            var routeTimeButton = document.createElement("button");
+            routeTimeButton.className = "route-time-calculation-button";
+            routeTimeButton.textContent = 'Calculate Route Time';
+            activityBlock.append(routeTimeButton)
 
-    activityBlocks.append(activityBlock) // append after #activity-input-form in #activity-blocks div
+            routeTimeButton.addEventListener("click", function() {
+                calculateRouteTime(activityAddress)
+                routeTimeButton.textContent = readableTime;
+            });
+
+        activityBlocks.append(activityBlock);
+
+        activityIndex++;
+    }
+    
+
+
+
 
     // can we make the blocks drag and drop-able?
 
@@ -99,11 +98,11 @@ scheduleButton.addEventListener('click', function (event) {
     //for each day [we are now 1-indexed], we generate a container for the user to receive day specific data
     //each search field is given a datalist and id based on its iteration
     //the submit buttons also have iterative ids
-    for (var i = 1; i <= days; i++) {
+    for (var dayIndex = 1; dayIndex <= days; dayIndex++) {
    
         dayContainer.innerHTML += `
             <section>
-                <h2>Day ${i}: ${dayjs(d1).add(i - 1, 'day').format('M-DD-YYYY')}</h2>
+                <h2>Day ${dayIndex}: ${dayjs(d1).add(dayIndex - 1, 'day').format('M-DD-YYYY')}</h2>
 
                 <div class="weather-block">
                     <p>Temp: <span></span>&deg;F</p>
@@ -115,25 +114,31 @@ scheduleButton.addEventListener('click', function (event) {
                 <div class="activity-input-form">
                     <p>Schedule Activities:</p>
                     <div><p>Search By Address</p>
-                    <input type="text" class="pure-input-rounded address-search" autocomplete="off" id="address${i}" placeholder="Address" list="auto-complete ${i}"></div>
-                    <div><input type="text" class="activity-description-input" class="pure-input-rounded" autocomplete="off" placeholder="Description of Activity (Optional"></div>
-                    <button id="activity-button-${i}">Input Activity</button>
+                    <input type="text" class="pure-input-rounded address-search" autocomplete="off" id="address${dayIndex}" placeholder="Address" list="auto-complete-${dayIndex}"></div>
+                    <div><input type="text" id="activity-description-${dayIndex}" class="pure-input-rounded" autocomplete="off" placeholder="Description of Activity (Optional"></div>
+                    <button id="activity-button-${dayIndex}">Input Activity</button>
                 </div>
 
-                <div id="activity-blocks"></div>
+                <div id="activity-blocks-${dayIndex}">
+                    <p>Planned Activites:</p
+                </div>
                 
+                </div>
+
                 <table class="pure-table pure-table-bordered">
                     <thead>
                         <tr>
                             <th>Time</th>
-                            <th>Activity</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr><td></td><td></td></tr>
-                        <tr><td></td><td></td></tr>
+                    <tbody id="body-${dayIndex}">
+                        <tr>
+                            <td></td>
+                            <td></td>
+                        </tr>
                     </tbody>
                 </table>
+
 
             </section>`;
 
@@ -141,14 +146,18 @@ scheduleButton.addEventListener('click', function (event) {
     }
     
     // input activity button eventlistener
-    for (var i = 1; i <= days; i++) {
-        var activityButton = document.getElementById(`activity-button-${i}`);
+    function addActivityButtonClickListener(dayIndex) {
+        var activityButton = document.getElementById(`activity-button-${dayIndex}`);
         if (activityButton) {
             activityButton.addEventListener('click', function (event) {
                 event.preventDefault();
-                generateActivityBlock(event.target, i); 
+                generateActivityBlock(dayIndex); 
             });
         }
+    }
+
+    for (var dayIndex = 1; dayIndex <= days; dayIndex++) {
+        addActivityButtonClickListener(dayIndex);
     }
 
     searchFields = document.querySelectorAll('.address-search');

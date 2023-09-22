@@ -55,7 +55,7 @@ scheduleButton.addEventListener('click', function (event) {
    
         dayContainer.innerHTML += `
             <section>
-                <h2>Day ${dayIndex}: ${dayjs(d1).add(idayIndex - 1, 'day').format('M-DD-YYYY')}</h2>
+                <h2>Day ${dayIndex}: ${dayjs(d1).add(dayIndex - 1, 'day').format('M-DD-YYYY')}</h2>
 
                 <div class="weather-block">
                     <p>Temp: <span></span>&deg;F</p>
@@ -68,7 +68,7 @@ scheduleButton.addEventListener('click', function (event) {
                     <p>Schedule Activities:</p>
                     <div>
                         <input type="text" 
-                            class="pure-input-rounded address-search" 
+                            class="pure-input-rounded activity-input address-search" 
                             id="address${dayIndex}" 
                             autocomplete="off" 
                             placeholder="Address" 
@@ -76,13 +76,13 @@ scheduleButton.addEventListener('click', function (event) {
                     </div>
                     <div>
                         <input type="text" 
-                            class="pure-input-rounded activity-description-input" 
+                            class="pure-input-rounded activity-input" 
                             id="description${dayIndex}" 
                             autocomplete="off" 
                             placeholder="Description of Activity (Optional">
                     </div>
-                    <div><input type="time"></div>
-                    <button class="activity-button" id="activity-button-${dayIndex}">Add to Schedule</button>
+                    <div><input type="time" class="activity-input"></div>
+                    <button class="activity-input activity-button" id="activity-button-${dayIndex}">Add to Schedule</button>
                 </div>
 
                 <table class="pure-table pure-table-bordered">
@@ -104,13 +104,20 @@ scheduleButton.addEventListener('click', function (event) {
 
 
     
-    //retrieve every "add to schedule" button per column to schedule activities
+    //retrieve every "add to schedule" button per column to schedule activities, then add functionality
     var activityButtons = document.querySelectorAll(`.activity-button`);
 
     activityButtons.forEach(item => {
         item.addEventListener('click', function(event) {
             event.preventDefault(); //parentElement is the activity-input-form div
             var addressInput = item.parentElement.children[1].children[0].value;
+
+            // check if the address input is empty, and return if it is
+            if (addressInput === '') {
+                alert('Please fill out an address before adding to the schedule.');
+                return; 
+            }
+
             var descriptionInput = item.parentElement.children[2].children[0].value;
             var timeInput = item.parentElement.children[3].children[0].value;
             //parentElement of activity-input-form div => section, [3].[1]. => table, tbody id="tbody-${i}"

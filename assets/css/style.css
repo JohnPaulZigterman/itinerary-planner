@@ -11,7 +11,7 @@ body {
 
 
 
-header {
+header, footer {
    background-color: brown;
    margin-bottom: 10px;
    min-height: 8vh;
@@ -28,7 +28,7 @@ section {
    display: flex;
    flex-wrap: wrap;
    flex-direction: column;
-   justify-content: space-evenly;
+   justify-content: flex-start;
    min-width: 32vh;
    min-height: 90vh;
 }
@@ -85,6 +85,8 @@ td {
 }
 
 
-/* .activity-input-form {
-   background-color: 
-} */
+.activity-input {
+   width: 100%;
+   box-sizing: border-box; 
+
+} 

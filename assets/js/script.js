@@ -1,5 +1,4 @@
 // establish variables for input fields and buttons
-
 var dateStart = document.getElementById('dateStart');
 var dateEnd = document.getElementById('dateEnd');
 var lodgingAddress = document.getElementById('lodging-address');
@@ -16,24 +15,19 @@ function fetchAPIData(apiUrl) {
         })
 };
 
-// function to generate activity blocks that will be appended to the column as its own row
+// function to generate activity blocks that will be appended to the each day's schedule per user inputs
 function generateActivityBlock(dayIndex) {
-    // // call function to fetch api data
-    // var apiURL = // hmmm... not sure if i even need this?
-
-    // fetchAPIData(apiURL)
-
+    // retrieve the inputs in the form and the table where the data will be appended
     var addressField = document.getElementById(`address${dayIndex}`);
     var descriptionField = document.getElementById(`description${dayIndex}`);
     var tableBody = document.getElementById(`tbody-${dayIndex}`);
 
-   tableBody.innerHTML += `
-   <tr>
-    <td>${addressField}</td>
-    <td>${descriptionField}</td>
-   </tr>
-   `;
-
+    tableBody.innerHTML += `
+        <tr>
+            <td>${addressField}</td>
+            <td>${descriptionField}</td>
+        </tr>
+        `;
 }
 
 
@@ -55,13 +49,17 @@ function closeModal() {
 var activityAddresses = [];
 
 
-
-// poi search
+// calculate number of days, generate columns per number of days, generate the html content of each column
+// in the generated actvity-input-form, add MapQuest API autocomplete, and generate button and add its functionality
+// generate route-time-calculator button, add functionality, store data for the route-time-calculator modal
 scheduleButton.addEventListener('click', function (event) {
     //prevents default submit button activity
     event.preventDefault();
 
-    // add lodging address to array for addresses
+    // disable button after first use, otherwise columns will continue to generate if button is clicked
+    scheduleButton.disabled = true;
+
+    // add lodging address to array for addresses - only if a lodging address was inputted
     if (lodgingAddress.value !== '') {
         activityAddresses.push(lodgingAddress.value);
         console.log(activityAddresses);
@@ -78,7 +76,7 @@ scheduleButton.addEventListener('click', function (event) {
     //each search field is given a datalist and id based on its iteration
     //the submit buttons also have iterative ids
     for (var dayIndex = 1; dayIndex <= days; dayIndex++) {
-   
+        // html for schedule columns
         dayContainer.innerHTML += `
             <section>
                 <h2>Day ${dayIndex}: ${dayjs(d1).add(dayIndex - 1, 'day').format('M-DD-YYYY')}</h2>
@@ -128,10 +126,12 @@ scheduleButton.addEventListener('click', function (event) {
             </section>`;
     }
 
-
     
-    //retrieve every "add to schedule" button per column to schedule activities, then add functionality
+    //retrieve every "add to schedule" button per column, then add functionality
     var activityButtons = document.querySelectorAll(`.activity-button`);
+
+    //functionality for the button to schedule activities
+    //require an address at minimum per activity, time and description optional
 
     activityButtons.forEach(item => {
         item.addEventListener('click', function(event) {
@@ -149,20 +149,23 @@ scheduleButton.addEventListener('click', function (event) {
             // parentElement of activity-input-form div => section, [3].[1]. => table, tbody id="tbody-${i}"
             var appendTableLocation = item.parentElement.parentElement.children[4].children[1];
             appendTableLocation.innerHTML += `
-            <tr>
-                <td>${timeInput}</td>
-                <td>${addressInput}</td>
-                <td>${descriptionInput}</td>
-            </tr>
-            `;
+                <tr>
+                    <td>${timeInput}</td>
+                    <td>${addressInput}</td>
+                    <td>${descriptionInput}</td>
+                </tr>
+                `;
             
             // clear inputs
             item.parentElement.children[1].children[0].value = ''; 
             item.parentElement.children[2].children[0].value = ''; 
             item.parentElement.children[3].children[0].value = '';
 
+            //retrieves the route-time-calculation-button, which may not exist yet
             var routeCalculatorButton = item.parentElement.parentElement.children[5].children[0];
 
+            //checks if button exists yet, adds if it doesn't exist
+            //this prevents from this button being generated every time an activity is scheduled
             if (!routeCalculatorButton) {
                 var appendRouteCalculatorButtonLocation = item.parentElement.parentElement.children[5];
                 var routeTimesButton = document.createElement("button");
@@ -205,19 +208,20 @@ scheduleButton.addEventListener('click', function (event) {
             // event listener for "calculate driving time" button
             var calculateDrivingTimeButton = document.getElementById('calculate-driving-time-button');
             calculateDrivingTimeButton.addEventListener('click', function() {
+                // access both dropdown menus
                 var startLocationDropdown = document.getElementById('address-dropdown-1');
                 var endLocationDropdown = document.getElementById('address-dropdown-2');
-
+                // access user choices for dropdowns
                 var startLocationAddress = startLocationDropdown.options[startLocationDropdown.selectedIndex].value;
                 var endLocationAddress = endLocationDropdown.options[endLocationDropdown.selectedIndex].value;
-
+                
                 calculateRouteTime(startLocationAddress, endLocationAddress);
             });
         })
     })
    
     
-
+    // POI autocomplete for search inputs
     searchFields = document.querySelectorAll('.address-search');
 
     searchFields.forEach(item => {
@@ -231,7 +235,7 @@ scheduleButton.addEventListener('click', function (event) {
             //calls or get an unusable response
             if (item.value.length > 2) {
                 //generates API url based on input data
-                suggestURL = "https://www.mapquestapi.com/search/v3/prediction?key=3HkLXgscqDPRETajQUjpap4tOOpSzX1U&limit=5&collection=adminArea,poi,address,category,franchise,airport&q=" + item.value;
+                suggestURL = `https://www.mapquestapi.com/search/v3/prediction?key=3HkLXgscqDPRETajQUjpap4tOOpSzX1U&limit=5&collection=adminArea,poi,address,category,franchise,airport&q=${item.value}`;
                 
                 //fetches API url
                 fetchAPIData(suggestURL)
@@ -265,7 +269,7 @@ scheduleButton.addEventListener('click', function (event) {
 lodgingAddress.addEventListener('input', function() {
 
     if (lodgingAddress.value.length > 1) {
-    suggestURL = "https://www.mapquestapi.com/search/v3/prediction?key=3HkLXgscqDPRETajQUjpap4tOOpSzX1U&limit=5&collection=adminArea,poi,address,category,franchise,airport&q=" + lodgingAddress.value;
+    suggestURL = `https://www.mapquestapi.com/search/v3/prediction?key=3HkLXgscqDPRETajQUjpap4tOOpSzX1U&limit=5&collection=adminArea,poi,address,category,franchise,airport&q=${lodgingAddress.value}`;
 
     fetchAPIData(suggestURL)
         .then(function(data) {
@@ -281,12 +285,6 @@ lodgingAddress.addEventListener('input', function() {
         return;
     }
 });
-
-
-
-
-
-// submitButton.addEventListener('click', placeSearch());
 
 
 // mapquest API route time calculator

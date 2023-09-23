@@ -75,13 +75,16 @@ scheduleButton.addEventListener('click', function (event) {
     //for each day [we are now 1-indexed], we generate a container for the user to receive day specific data
     //each search field is given a datalist and id based on its iteration
     //the submit buttons also have iterative ids
+
+
+
     for (var dayIndex = 1; dayIndex <= days; dayIndex++) {
         // html for schedule columns
         dayContainer.innerHTML += `
             <section>
                 <h2>Day ${dayIndex}: ${dayjs(d1).add(dayIndex - 1, 'day').format('M-DD-YYYY')}</h2>
 
-                <div class="weather-block">
+                <div class="weatherDisplay" id="weatherDisplay${dayIndex}">
                     <p>Temp: <span></span>&deg;F</p>
                     <p>Precipitation: <span></span>%</p>
                     <p>Wind: <span></span>mph</p>
@@ -126,7 +129,84 @@ scheduleButton.addEventListener('click', function (event) {
             </section>`;
     }
 
-    
+    // BEGIN CODE INTEGRATION - JOHN - BEGIN CODE INTEGRATION - JOHN
+
+    //establishes search input value
+    var searchCityInput = $('#lodging-address');
+    //empty lat and lon variables
+    var lat = '';
+    var lon = '';
+    var weatherDisplay = $('.weatherDisplay');
+
+    var city = searchCityInput.val();
+    var geocodingUrl = `https://www.mapquestapi.com/geocoding/v1/address?key=4YRzkiCJVHh4RSMvEfNjFeqjbAup1m71&location=${city}`;
+
+    fetch(geocodingUrl)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            var locations = data.results[0].locations;
+            if (locations.length > 0) {
+                lat = locations[0].latLng.lat;
+                lon = locations[0].latLng.lng;
+                var weatherUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=7275518d08ae835bf6361e49e3af30c0&units=imperial`;
+                return fetch(weatherUrl);
+            }
+        })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (weatherData) {
+            console.log(weatherData);
+            $('.weatherDisplay').empty();
+
+            var startDate = $('#dateStart').val();
+            var endDate = $('#dateEnd').val();
+
+            var filteredData = weatherData.list.filter(function (entry) {
+                var date = entry.dt_txt.split(' ')[0]; 
+                return date >= startDate && date <= endDate;
+            });
+
+            var selectedWeatherData = {};
+
+            filteredData.forEach(function (entry) {
+                var date = entry.dt_txt.split(' ')[0]; 
+                if (!selectedWeatherData[date]) {
+                    selectedWeatherData[date] = {
+                        cityName: weatherData.city.name,
+                        weatherIcon: entry.weather[0].icon,
+                        date: entry.dt_txt,
+                        temp: entry.main.temp,
+                        humidity: entry.main.humidity,
+                        wind: entry.wind.speed,
+                    };
+                }
+            });
+
+            Object.keys(selectedWeatherData).forEach(function (date, index) {
+                var indexPlus = (index + 1);
+                var weatherDisplayID = ("#weatherDisplay" + indexPlus);
+                var selectedData = selectedWeatherData[date];
+                var cityNameD = $("<p>").text(selectedData.cityName);
+                var weatherIconUrl = `https://api.openweathermap.org/img/w/${selectedData.weatherIcon}.png`;
+                var weatherIconD = $("<img>").attr('src', weatherIconUrl);
+                var dateD = $("<p>").text(selectedData.date);
+                var tempD = $("<p>").html('Temp: ' + selectedData.temp + '&deg;F');
+                var humidityD = $("<p>").text('Humidity: ' + selectedData.humidity + '%');
+                var windD = $("<p>").text('Wind: ' + selectedData.wind + ' MPH');
+                console.log(selectedWeatherData);
+
+                $(weatherDisplayID).append(weatherIconD);
+                $(weatherDisplayID).append(cityNameD);
+                $(weatherDisplayID).append(dateD);
+                $(weatherDisplayID).append(tempD);
+                $(weatherDisplayID).append(humidityD);
+                $(weatherDisplayID).append(windD);
+            });
+        })
+
     //retrieve every "add to schedule" button per column, then add functionality
     var activityButtons = document.querySelectorAll(`.activity-button`);
 

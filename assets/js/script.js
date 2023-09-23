@@ -79,12 +79,13 @@ scheduleButton.addEventListener('click', function (event) {
 
 
     for (var dayIndex = 1; dayIndex <= days; dayIndex++) {
+        currentDayNumber = (dayIndex + 1);
         // html for schedule columns
         dayContainer.innerHTML += `
             <section>
-                <h2>Day ${dayIndex}: ${dayjs(d1).add(dayIndex - 1, 'day').format('M-DD-YYYY')}</h2>
+                <h2>Day ${currentDayNumber}: ${dayjs(d1).add(dayIndex, 'day').format('M-DD-YYYY')}</h2>
 
-                <div class="weatherDisplay" id="weatherDisplay${dayIndex}">
+                <div class="weatherDisplay" id="weatherDisplay${dayjs(d1).add(dayIndex, 'day').format('YYYY-MM-DD')}">
                     <p>Temp: <span></span>&deg;F</p>
                     <p>Precipitation: <span></span>%</p>
                     <p>Wind: <span></span>mph</p>
@@ -185,9 +186,8 @@ scheduleButton.addEventListener('click', function (event) {
                 }
             });
 
-            Object.keys(selectedWeatherData).forEach(function (date, index) {
-                var indexPlus = (index + 1);
-                var weatherDisplayID = ("#weatherDisplay" + indexPlus);
+            Object.keys(selectedWeatherData).forEach(function (date) {
+                var weatherDisplayID = ("#weatherDisplay" + date);
                 var selectedData = selectedWeatherData[date];
                 var cityNameD = $("<p>").text(selectedData.cityName);
                 var weatherIconUrl = `https://api.openweathermap.org/img/w/${selectedData.weatherIcon}.png`;
@@ -196,7 +196,7 @@ scheduleButton.addEventListener('click', function (event) {
                 var tempD = $("<p>").html('Temp: ' + selectedData.temp + '&deg;F');
                 var humidityD = $("<p>").text('Humidity: ' + selectedData.humidity + '%');
                 var windD = $("<p>").text('Wind: ' + selectedData.wind + ' MPH');
-                console.log(selectedWeatherData);
+                console.log(date);
 
                 $(weatherDisplayID).append(weatherIconD);
                 $(weatherDisplayID).append(cityNameD);

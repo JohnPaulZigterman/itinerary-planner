@@ -234,10 +234,7 @@ scheduleButton.addEventListener('click', function (event) {
                 suggestURL = "https://www.mapquestapi.com/search/v3/prediction?key=3HkLXgscqDPRETajQUjpap4tOOpSzX1U&limit=5&collection=adminArea,poi,address,category,franchise,airport&q=" + item.value;
                 
                 //fetches API url
-                fetch(suggestURL)
-                    .then(function(response) {
-                        return response.json();
-                    })
+                fetchAPIData(suggestURL)
                     //dynamically refreshes and populates autofill field
                     .then(function(data) {
                         //clears autofill on receipt of data
@@ -270,10 +267,7 @@ lodgingAddress.addEventListener('input', function() {
     if (lodgingAddress.value.length > 1) {
     suggestURL = "https://www.mapquestapi.com/search/v3/prediction?key=3HkLXgscqDPRETajQUjpap4tOOpSzX1U&limit=5&collection=adminArea,poi,address,category,franchise,airport&q=" + lodgingAddress.value;
 
-    fetch(suggestURL)
-        .then(function(response) {
-            return response.json();
-        })
+    fetchAPIData(suggestURL)
         .then(function(data) {
             // show API response data 
             lodgingAddress.innerHTML = "";

@@ -36,9 +36,12 @@ If you possess at least one address, aside from your primary lodging location, t
 [jquery](https://jquery.com/).: lightweight, and feature-rich JavaScript library that simplifies and streamlines client-side web development. 
 
 ## Credits
-[@AJohnPaulZigterman](https://github.com/AJohnPaulZigterman).
-[@hjlee17](https://github.com/hjlee17).
+[@AJohnPaulZigterman](https://github.com/AJohnPaulZigterman)
+
+[@hjlee17](https://github.com/hjlee17)
+
 [@mrunmaigadbail](https://github.com/mrunmaigadbail).
+
 [@musaomark01](https://github.com/musaomark01).
 
 ## Link

@@ -47,4 +47,4 @@ If you possess at least one address, aside from your primary lodging location, t
 ## Link
 
 ## License
-This project is licensed under MIT [licensed](LICENSE.md).
+This project is licensed under MIT [licensed](LICENSE).

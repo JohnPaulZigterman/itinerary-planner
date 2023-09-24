@@ -17,7 +17,7 @@ Then the days will display with the forecast and input sections
 To add an activity to your schedule enter the address (There is an autofill pick the address), description for your activity, and add the time 
 <img src="assets/images/Screenshot 2023-09-23 222757.png">
 
-The activity will display below you can add as much as you need for that day repeat for the rest of the days
+The activity will be displayed below you can add as much as you need for that day and repeat for the rest of the days
 <img src="assets/images/Screenshot 2023-09-23 223836.png">
 
 If you possess at least one address, aside from your primary lodging location, the 'Distance Calculation' feature will be displayed at the bottom of the schedule. This functionality allows you to input two distinct addresses, enabling the system to compute the distance between these specified locations accurately and in real-time
@@ -25,11 +25,11 @@ If you possess at least one address, aside from your primary lodging location, t
 
 
 ## Technologies Used
-[MapQuest][https://developer.mapquest.com/documentation/]: is a mapping and location-based services provider that offers a variety of APIs for developers to integrate mapping and geolocation functionality into their applications. These APIs allowed developers to access maps, geocoding services, directions, traffic information, and more.
-[OpenWeatherMap][https://openweathermap.org/api]:  is an API that provides access to weather data and related information for locations around the world. 
-[PureCSS][https://purecss.io/layouts/]:  is a minimal and lightweight CSS framework created by Yahoo for building responsive web designs and web applications. 
-[Dayjs][https://day.js.org/]: is a JavaScript library for parsing, manipulating, and formatting dates and times.
-[jquery][https://jquery.com/]: lightweight, and feature-rich JavaScript library that simplifies and streamlines client-side web development. 
+[MapQuest](https://developer.mapquest.com/documentation/).: is a mapping and location-based services provider that offers a variety of APIs for developers to integrate mapping and geolocation functionality into their applications. These APIs allowed developers to access maps, geocoding services, directions, traffic information, and more.
+[OpenWeatherMap](https://openweathermap.org/api).:  is an API that provides access to weather data and related information for locations around the world. 
+[PureCSS](https://purecss.io/layouts/).:  is a minimal and lightweight CSS framework created by Yahoo for building responsive web designs and web applications. 
+[Dayjs](https://day.js.org/).: is a JavaScript library for parsing, manipulating, and formatting dates and times.
+[jquery](https://jquery.com/).: lightweight, and feature-rich JavaScript library that simplifies and streamlines client-side web development. 
 
 ## Credits
 @AJohnPaulZigterman
@@ -40,4 +40,4 @@ If you possess at least one address, aside from your primary lodging location, t
 ## Link
 
 ## License
-This project is licensed under MIT [licensed][LICENSE.md]
+This project is licensed under MIT [licensed](LICENSE.md).

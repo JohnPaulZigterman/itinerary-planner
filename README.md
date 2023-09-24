@@ -37,11 +37,8 @@ If you possess at least one address, aside from your primary lodging location, t
 
 ## Credits
 [@AJohnPaulZigterman](https://github.com/AJohnPaulZigterman).
-
 [@hjlee17](https://github.com/hjlee17).
-
 [@mrunmaigadbail](https://github.com/mrunmaigadbail).
-
 [@musaomark01](https://github.com/musaomark01).
 
 ## Link

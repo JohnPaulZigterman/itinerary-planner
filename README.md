@@ -26,15 +26,22 @@ If you possess at least one address, aside from your primary lodging location, t
 
 ## Technologies Used
 [MapQuest](https://developer.mapquest.com/documentation/).: is a mapping and location-based services provider that offers a variety of APIs for developers to integrate mapping and geolocation functionality into their applications. These APIs allowed developers to access maps, geocoding services, directions, traffic information, and more.
+
 [OpenWeatherMap](https://openweathermap.org/api).:  is an API that provides access to weather data and related information for locations around the world. 
+
 [PureCSS](https://purecss.io/layouts/).:  is a minimal and lightweight CSS framework created by Yahoo for building responsive web designs and web applications. 
+
 [Dayjs](https://day.js.org/).: is a JavaScript library for parsing, manipulating, and formatting dates and times.
+
 [jquery](https://jquery.com/).: lightweight, and feature-rich JavaScript library that simplifies and streamlines client-side web development. 
 
 ## Credits
 @AJohnPaulZigterman
+
 @hjlee17
+
 @mrunmaigadbail
+
 @musaomark01
 
 ## Link

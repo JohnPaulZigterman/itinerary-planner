@@ -5,6 +5,7 @@ var lodgingAddress = document.getElementById('lodging-address');
 var submitButton = document.getElementById('submitButton');
 var dayContainer = document.getElementById('day-container');
 var scheduleButton = document.getElementById('scheduleButton');
+var clearButton = document.getElementById('clearButton');
 var days;
 
 // generally declared fetch function for reference and ease of use
@@ -68,6 +69,7 @@ scheduleButton.addEventListener('click', function (event) {
     //establishes two variables based on user input dates
     var d1 = new Date(dateStart.value);
     var d2 = new Date(dateEnd.value);
+
     //calculates the difference between the two dates in milliseconds
     var diff = Math.abs(d1-d2);
     //converts milliseconds to days and makes the days indexed to 1 instead of 0
@@ -137,7 +139,6 @@ scheduleButton.addEventListener('click', function (event) {
     //empty lat and lon variables
     var lat = '';
     var lon = '';
-    var weatherDisplay = $('.weatherDisplay');
 
     var city = searchCityInput.val();
     var geocodingUrl = `https://www.mapquestapi.com/geocoding/v1/address?key=4YRzkiCJVHh4RSMvEfNjFeqjbAup1m71&location=${city}`;
@@ -416,3 +417,161 @@ function calculateRouteTime (startLocationAddress, endLocationAddress) {
             }
     })
 }
+
+//Global Event Listener for saving all contents to local storage
+
+$('#saveButton').on("click",function(e){
+    e.preventDefault();
+    localStorage.setItem('results', dayContainer.innerHTML);
+}); 
+
+window.addEventListener("load", (event) => {
+    if (localStorage.getItem('results')) {
+        dayContainer.innerHTML += localStorage.getItem('results');
+
+        //retrieve every "add to schedule" button per column, then add functionality
+        var activityButtons = document.querySelectorAll(`.activity-button`);
+
+        //functionality for the button to schedule activities
+        //require an address at minimum per activity, time and description optional
+
+        activityButtons.forEach(item => {
+            item.addEventListener('click', function(event) {
+                event.preventDefault(); //parentElement is the activity-input-form div
+                var addressInput = item.parentElement.children[1].children[0].value;
+
+                // check if the address input is empty, and return if it is
+                if (addressInput === '') {
+                    alert('Please fill out an address before adding to the schedule.');
+                    return; 
+                }
+
+                var descriptionInput = item.parentElement.children[2].children[0].value;
+                var timeInput = item.parentElement.children[3].children[0].value;
+                // parentElement of activity-input-form div => section, [3].[1]. => table, tbody id="tbody-${i}"
+                var appendTableLocation = item.parentElement.parentElement.children[4].children[1];
+                appendTableLocation.innerHTML += `
+                    <tr>
+                        <td>${timeInput}</td>
+                        <td>${addressInput}</td>
+                        <td>${descriptionInput}</td>
+                    </tr>
+                    `;
+                
+                // clear inputs
+                item.parentElement.children[1].children[0].value = ''; 
+                item.parentElement.children[2].children[0].value = ''; 
+                item.parentElement.children[3].children[0].value = '';
+
+                //retrieves the route-time-calculation-button, which may not exist yet
+                var routeCalculatorButton = item.parentElement.parentElement.children[5].children[0];
+
+                //checks if button exists yet, adds if it doesn't exist
+                //this prevents from this button being generated every time an activity is scheduled
+                if (!routeCalculatorButton) {
+                    var appendRouteCalculatorButtonLocation = item.parentElement.parentElement.children[5];
+                    var routeTimesButton = document.createElement("button");
+                    routeTimesButton.className = "route-time-calculation-button";
+                    routeTimesButton.textContent = 'Calculate Route Times';
+                    appendRouteCalculatorButtonLocation.append(routeTimesButton)
+
+                    // add event listener to open modal
+                    routeTimesButton.addEventListener('click', openModal);
+
+                    // add event listener to close modal
+                    var modalCloseButton = document.getElementById('modal-close-button');
+                    modalCloseButton.addEventListener('click', closeModal);
+                }
+
+                // create array for addresses if needed, otherwise add to it
+                activityAddresses = activityAddresses || [];
+                activityAddresses.push(addressInput);
+                console.log(activityAddresses)
+
+
+                // retrieve and reset dropdowns for addresses
+                var addressDropdowns = document.getElementsByClassName('activity-addresses-dropdown');
+
+                // loop for each dropdown
+                for (var i = 0; i < addressDropdowns.length; i++) {
+                    var addressDropdown = addressDropdowns[i];
+                    addressDropdown.innerHTML = ''; 
+
+                    // populate dropdowns with addresses
+                    if (activityAddresses) {
+                        activityAddresses.forEach(item => {
+                            var option = document.createElement('option');
+                            option.textContent = item;
+                            addressDropdown.appendChild(option);
+                        });
+                    }
+                }
+
+                // event listener for "calculate driving time" button
+                var calculateDrivingTimeButton = document.getElementById('calculate-driving-time-button');
+                calculateDrivingTimeButton.addEventListener('click', function() {
+                    // access both dropdown menus
+                    var startLocationDropdown = document.getElementById('address-dropdown-1');
+                    var endLocationDropdown = document.getElementById('address-dropdown-2');
+                    // access user choices for dropdowns
+                    var startLocationAddress = startLocationDropdown.options[startLocationDropdown.selectedIndex].value;
+                    var endLocationAddress = endLocationDropdown.options[endLocationDropdown.selectedIndex].value;
+                    
+                    calculateRouteTime(startLocationAddress, endLocationAddress);
+                });
+            })
+        })
+    
+        
+        // POI autocomplete for search inputs
+        searchFields = document.querySelectorAll('.address-search');
+
+        searchFields.forEach(item => {
+            //listens for inputs in the search fields
+            item.addEventListener('input', function() {
+                //logs some diagnostic stuff to console
+                console.log(item.value);
+                console.log(item.getAttribute("list"));
+
+                //checks that the number of characters is at least three so as not to waste API
+                //calls or get an unusable response
+                if (item.value.length > 2) {
+                    //generates API url based on input data
+                    suggestURL = `https://www.mapquestapi.com/search/v3/prediction?key=3HkLXgscqDPRETajQUjpap4tOOpSzX1U&limit=5&collection=adminArea,poi,address,category,franchise,airport&q=${item.value}`;
+                    
+                    //fetches API url
+                    fetchAPIData(suggestURL)
+                        //dynamically refreshes and populates autofill field
+                        .then(function(data) {
+                            //clears autofill on receipt of data
+                            item.innerHTML = "";
+                            //generates empty list variable
+                            var list = '';
+                            //for each entry in the results, generates an autofill option based on that node's data
+                            //and adds that html to the "list" variable
+                            console.log(data);
+                            for (var i = 0; i < data.results.length; i++) {
+                                list += "<option value='" + data.results[i].displayString + "'></option>";
+                            }
+                            //appends list variable to a datalist and places it inside the input field as autofill data
+                            //additionally, adds the "list" attribute from that field to the datalist's ID
+                            //which allows the input field to reference the datalist
+                            item.innerHTML = "<datalist id='" + item.getAttribute('list') + "'>" + list + "</datalist>";
+                        })
+                    } else {
+                        //if the input is not at least three characters, nothing happens
+                        return;
+                    }
+            })
+        })
+    } else {
+        return;
+    }
+  });
+
+  
+clearButton.addEventListener('click', function(e) {
+    e.preventDefault();
+    localStorage.clear();
+    dayContainer.innerHTML = "";
+})

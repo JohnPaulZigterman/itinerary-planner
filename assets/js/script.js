@@ -40,13 +40,13 @@ function openModal() {
 }
 
   
-// function to close  modal
+// function to close modal
 function closeModal() {
     var modal = document.getElementById('route-modal');
     modal.style.display = 'none';
 }
 
-// array of all activity addresses (not sure how to create array per day...) 
+// array of all activity addresses 
 var activityAddresses = [];
 
 
@@ -85,7 +85,7 @@ scheduleButton.addEventListener('click', function (event) {
         // html for schedule columns
         dayContainer.innerHTML += `
             <section>
-                <h2>Day ${currentDayNumber}: ${dayjs(d1).add(dayIndex, 'day').format('M-DD-YYYY')}</h2>
+                <h2>Day ${dayIndex}: ${dayjs(d1).add(dayIndex, 'day').format('M-DD-YYYY')}</h2>
 
                 <div class="weatherDisplay" id="weatherDisplay${dayjs(d1).add(dayIndex, 'day').format('YYYY-MM-DD')}">
                     <p>Temp: <span></span>&deg;F</p>

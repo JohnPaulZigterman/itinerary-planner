@@ -5,7 +5,6 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Itinerary Planner</title>
-        <!-- mapquest api following 2 lines -->
         <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest-maps.js"></script>
         <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest-maps.css"/>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
@@ -16,6 +15,7 @@
           <h1> Itinerary Planner</h1> 
         </header>
 
+        <!-- initial user input to begin scheduling trip itinerary -->
         <main id="main">
             <form class="pure-form" autocomplete="off">
                 <p>Enter the date you want to start your trip?</p>
@@ -29,12 +29,12 @@
             </form>
         </main>
 
+        <!-- schedule column container -->
         <br>
             <div id="day-container"></div>
         <br>
-        
+
         <!-- route time calculation modal  -->
-        <!-- add CSS to account for spacing, instead of using <br>s -->
         <div id="route-modal" class="modal">
             <div class="modal-content">
                 <span class="close" id="modal-close-button">&times;</span>

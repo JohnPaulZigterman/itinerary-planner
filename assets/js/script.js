@@ -63,7 +63,6 @@ scheduleButton.addEventListener('click', function (event) {
     // add lodging address to array for addresses - only if a lodging address was inputted
     if (lodgingAddress.value !== '') {
         activityAddresses.push(lodgingAddress.value);
-        console.log(activityAddresses);
     }
 
     //establishes two variables based on user input dates
@@ -160,7 +159,6 @@ scheduleButton.addEventListener('click', function (event) {
             return response.json();
         })
         .then(function (weatherData) {
-            console.log(weatherData);
             $('.weatherDisplay').empty();
 
             var startDate = $('#dateStart').val();
@@ -197,7 +195,6 @@ scheduleButton.addEventListener('click', function (event) {
                 var tempD = $("<p>").html('Temp: ' + selectedData.temp + '&deg;F');
                 var humidityD = $("<p>").text('Humidity: ' + selectedData.humidity + '%');
                 var windD = $("<p>").text('Wind: ' + selectedData.wind + ' MPH');
-                console.log(date);
 
                 $(weatherDisplayID).append(weatherIconD);
                 $(weatherDisplayID).append(cityNameD);
@@ -265,7 +262,6 @@ scheduleButton.addEventListener('click', function (event) {
             // create array for addresses if needed, otherwise add to it
             activityAddresses = activityAddresses || [];
             activityAddresses.push(addressInput);
-            console.log(activityAddresses)
 
 
             // retrieve and reset dropdowns for addresses
@@ -308,9 +304,6 @@ scheduleButton.addEventListener('click', function (event) {
     searchFields.forEach(item => {
         //listens for inputs in the search fields
         item.addEventListener('input', function() {
-            //logs some diagnostic stuff to console
-            console.log(item.value);
-            console.log(item.getAttribute("list"));
 
             //checks that the number of characters is at least three so as not to waste API
             //calls or get an unusable response
@@ -328,7 +321,6 @@ scheduleButton.addEventListener('click', function (event) {
                         var list = '';
                         //for each entry in the results, generates an autofill option based on that node's data
                         //and adds that html to the "list" variable
-                        console.log(data);
                         for (var i = 0; i < data.results.length; i++) {
                             list += "<option value='" + data.results[i].displayString + "'></option>";
                         }
@@ -377,8 +369,6 @@ function calculateRouteTime (startLocationAddress, endLocationAddress) {
     fetchAPIData(requestUrl)
 
         .then(function(data) {
-            // show API response data 
-            console.log(data);
 
             var seconds = data.time[1];
             // convert seconds to hours (3600s/hr)
@@ -486,7 +476,6 @@ window.addEventListener("load", (event) => {
                 // create array for addresses if needed, otherwise add to it
                 activityAddresses = activityAddresses || [];
                 activityAddresses.push(addressInput);
-                console.log(activityAddresses)
 
 
                 // retrieve and reset dropdowns for addresses
@@ -529,9 +518,6 @@ window.addEventListener("load", (event) => {
         searchFields.forEach(item => {
             //listens for inputs in the search fields
             item.addEventListener('input', function() {
-                //logs some diagnostic stuff to console
-                console.log(item.value);
-                console.log(item.getAttribute("list"));
 
                 //checks that the number of characters is at least three so as not to waste API
                 //calls or get an unusable response
@@ -549,7 +535,6 @@ window.addEventListener("load", (event) => {
                             var list = '';
                             //for each entry in the results, generates an autofill option based on that node's data
                             //and adds that html to the "list" variable
-                            console.log(data);
                             for (var i = 0; i < data.results.length; i++) {
                                 list += "<option value='" + data.results[i].displayString + "'></option>";
                             }
